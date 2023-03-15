@@ -15,6 +15,9 @@
 // All these brokers work with this code. 
 // Uncomment the one you want to use. 
 
+// include the MQTT library:
+// import * as mqtt from "mqtt"
+
 ////// emqx. Works in both basic WS and TLS WS:
 // const broker = 'wss://broker.emqx.io:8084/mqtt'
 // const broker = 'ws://broker.emqx.io:8083/mqtt'

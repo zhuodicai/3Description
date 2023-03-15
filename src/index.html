@@ -6,16 +6,19 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<link type="text/css" rel="stylesheet" href="style.css">
-	<script src="https://unpkg.com/mqtt/dist/mqtt.js " crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<!-- <script src="https://unpkg.com/mqtt/dist/mqtt.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+	<script src="./dependency/mqtt.min.js"></script>
 	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
-
+	<!-- <script type="module" src="./whisper.js"></script> -->
 </head>
 
 <body>
 	<div style="position: relative; display: inline-block;">
 		<p id="local" hidden="true">a</p>
-		<p id="remote" >remote:</p>
+		<p id="remote" >remote data:</p>
+		<p id="speechResult">speech result:</p>
+		
 	</div>
 
 	<!-- <div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js webgl</a> - materials - dynamic cube reflection</div> -->
@@ -31,6 +34,7 @@
 
 	<script id="canvas" type="module" src="./index.js"></script>
 	<script type="module" src="./communication.js"></script>
+	
 
 
 </body>
