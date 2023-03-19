@@ -57,7 +57,7 @@ let localDiv, remoteDiv;
 // whether the client should be publishing or not:
 let publishing = false;
 
-function setup() {
+export function setup() {
   // put the divs in variables for ease of use:
   localDiv = document.getElementById('local');
   remoteDiv = document.getElementById('remote');
@@ -73,7 +73,7 @@ function setup() {
   client.on('error', onError);
 }
 
-function loop() {
+export function loop() {
   // if the client is connected, publish:
   if (client.connected && publishing) {
     // make a message with a random number from 0-255
@@ -146,7 +146,3 @@ function onMessage(topic, payload, packet) {
   remoteDiv.innerHTML = payload.toString();
 }
 
-// on page load, call the setup function:
-document.addEventListener('DOMContentLoaded', setup);
-// run a loop every 2 seconds:
-setInterval(loop, 2000);

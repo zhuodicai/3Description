@@ -4,13 +4,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 // import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 // import { CatmullRomCurve3 } from 'three';
-import { NURBSCurve } from 'three/addons/curves/NURBSCurve.js';
-import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
-import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
+// import { NURBSCurve } from 'three/addons/curves/NURBSCurve.js';
+// import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
+// import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-// import Stats from 'three/addons/libs/stats.module.js';
+// const communication = require("./communication.js");
+import { setup, loop } from "./communication.js";
+import { recordDef } from "./record.js";
 
 let camera, scene, renderer, stats;
 // let sphere, material;
@@ -24,14 +26,13 @@ let cubeCamera, cubeRenderTarget;
 
 let controls;
 
-// init();
 
 function init() {
 
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
     renderer.setAnimationLoop(animation);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -372,14 +373,12 @@ function exportToObj() {
 
 function onWindowResized() {
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth.toLocaleStrin / 2, window.innerHeight / 2);
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
 }
-
-init();
 
 function animation(msTime) {
 
@@ -454,3 +453,12 @@ function animation(msTime) {
 
     }
 }
+
+init();
+recordDef();
+
+
+// on page load, call the setup function:
+document.addEventListener('DOMContentLoaded', setup());
+// run a loop every 2 seconds:
+setInterval(loop(), 2000);
