@@ -26,17 +26,21 @@ let cubeCamera, cubeRenderTarget;
 
 let controls;
 
+let containerWidth = document.getElementById("container").offsetWidth;
 
 function init() {
 
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+    renderer.setSize(window.innerWidth / 1.4, window.innerHeight / 1.4);
     renderer.setAnimationLoop(animation);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     document.body.appendChild(renderer.domElement);
+
+    renderer.domElement.style.display = 'block'; // 让 canvas 元素变成块级元素
+    renderer.domElement.style.margin = 'auto'; // 设置 margin 居中对齐
 
     window.addEventListener('resize', onWindowResized);
 
@@ -44,7 +48,7 @@ function init() {
     // document.body.appendChild(stats.dom);
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 75;
+    camera.position.z = 25;
 
     scene = new THREE.Scene();
     scene.rotation.y = 0.5; // avoid flying objects occluding the sun
@@ -373,7 +377,7 @@ function exportToObj() {
 
 function onWindowResized() {
 
-    renderer.setSize(window.innerWidth.toLocaleStrin / 2, window.innerHeight / 2);
+    renderer.setSize(window.innerWidth / 1.4, window.innerHeight / 1.4);
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

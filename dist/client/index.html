@@ -16,9 +16,10 @@
 
 <body>
 
-	<div class="container">
-		<h1>OpenAI demo</h1>
-		<h2>Step1: Record</h2>
+	<div class="container" id="container">
+		<br>
+		<h1>DEMO: How would you describe the degree of openness of a flower?</h1>
+		<h3>Step1: Record & Recognition</h3>
 		<p>Please use below buttons to record your message.</p>
 		<div>
 			<button type="button" id=record class="btn btn-primary">Record</button>
@@ -32,7 +33,7 @@
 			<label for="record-message-label" class="form-label">Recorded message</label>
 			<textarea class="form-control" id="record-message" rows="3"></textarea>
 		</div>
-		<h2>Step2: Show result</h2>
+		<h3>Step2: Result & Response</h3>
 		<p>OpenAI will respond based on your message.</p>
 		<div class="mb-3">
 			<label for="respond-message-label" class="form-label">Respond message</label>
@@ -43,9 +44,8 @@
 			<p id="remote">remote data:</p>
 		</div>
 	</div>
-
-
 </body>
+
 <script type="module" src="bundle.js"></script>
 
 </html>
