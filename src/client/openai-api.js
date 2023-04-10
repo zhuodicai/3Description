@@ -1,6 +1,6 @@
+import { OPENAI_API_KEY } from './OPENAI_API_KEY';
 const FormData = require("form-data");
 const axios = require("axios");
-// const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 
 export const openAiTranscription = async (data) => {
@@ -14,7 +14,8 @@ export const openAiTranscription = async (data) => {
         .post("https://api.openai.com/v1/audio/transcriptions", formData, {
             headers: {
                 //KEY
-                // Authorization: `Bearer ${OPENAI_API_KEY}`,
+                // Authorization: `Bearer ${"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"}`,
+                Authorization: `Bearer ${OPENAI_API_KEY}`,
                 "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
             },
         })
@@ -49,7 +50,8 @@ export const openAiChat = async (data) => {
         .post("https://api.openai.com/v1/chat/completions", formData, {
             headers: {
                 //KEY
-                Authorization: `Bearer ${"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"}`,
+                // Authorization: `Bearer ${"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"}`,
+                Authorization: `Bearer ${OPENAI_API_KEY}`,
                 "Content-Type": `application/json`,
             },
         })
