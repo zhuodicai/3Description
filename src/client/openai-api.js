@@ -4,7 +4,7 @@ const axios = require("axios");
 
 
 export const openAiTranscription = async (data) => {
- 
+
     const model = "whisper-1";
     const mp3File = new File([data], 'record.mp3');
     const formData = new FormData();
@@ -14,7 +14,6 @@ export const openAiTranscription = async (data) => {
         .post("https://api.openai.com/v1/audio/transcriptions", formData, {
             headers: {
                 //KEY
-                Authorization: `Bearer ${"OPENAI_API_KEY"}`,
                 // Authorization: `Bearer ${OPENAI_API_KEY}`,
                 "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
             },
@@ -50,7 +49,7 @@ export const openAiChat = async (data) => {
         .post("https://api.openai.com/v1/chat/completions", formData, {
             headers: {
                 //KEY
-                Authorization: `Bearer ${"OPENAI_API_KEY"}`,
+                Authorization: `Bearer ${"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"}`,
                 "Content-Type": `application/json`,
             },
         })
