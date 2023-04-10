@@ -14,7 +14,6 @@ export const openAiTranscription = async (data) => {
         .post("https://api.openai.com/v1/audio/transcriptions", formData, {
             headers: {
                 //KEY
-                // Authorization: `Bearer ${"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"}`,
                 Authorization: `Bearer ${OPENAI_API_KEY}`,
                 "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
             },
@@ -50,7 +49,6 @@ export const openAiChat = async (data) => {
         .post("https://api.openai.com/v1/chat/completions", formData, {
             headers: {
                 //KEY
-                // Authorization: `Bearer ${"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"}`,
                 Authorization: `Bearer ${OPENAI_API_KEY}`,
                 "Content-Type": `application/json`,
             },
