@@ -18,21 +18,31 @@
 
 	<div class="container" id="container">
 		<br>
-		<h1>DEMO: How would you describe the degree of openness of a flower?</h1>
-		<h3>Step1: Record & Recognition</h3>
-		<p>Please use below buttons to record your message.</p>
-		<div>
-			<button type="button" id=record class="btn btn-primary">Record</button>
-			<button type="button" id=stopRecord disabled class="btn btn-danger">Stop</button>
-		</div>
+		<h1>Please describe the appearance of a flower to me!</h1>
 		<br>
-		<div class="mb-3">
-			<audio id=recordedAudio></audio>
+		<h3>Step1: Record & Recognition</h3>
+		<div class="row">
+			<div class="col-6">
+				<p>Please use below buttons to record your message.</p>	
+				<div class="row">
+					<div class="col">
+						<button type="button" id=record class="btn btn-primary">Record</button>
+						<button type="button" id=stopRecord disabled class="btn btn-danger">Stop</button>
+					</div>
+					<div class="col">
+						<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="col-6">
+				<div class="mb-3">
+					<label for="record-message-label" class="form-label">Recorded message</label>
+					<textarea class="form-control" id="record-message" rows="2"></textarea>
+				</div>
+			</div>
 		</div>
-		<div class="mb-3">
-			<label for="record-message-label" class="form-label">Recorded message</label>
-			<textarea class="form-control" id="record-message" rows="3"></textarea>
-		</div>
+
 		<h3>Step2: Result & Response</h3>
 		<p>OpenAI will respond based on your message.</p>
 		<div class="mb-3">
@@ -44,6 +54,8 @@
 			<p id="remote">remote data:</p>
 		</div>
 	</div>
+	</div>
+
 </body>
 
 <script type="module" src="bundle.js"></script>
