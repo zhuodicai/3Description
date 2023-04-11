@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/zhuodicai/metaflower#readme",
   "dependencies": {
+    "@mediapipe/tasks-vision": "^0.1.0-alpha-8",
     "@types/dat.gui": "^0.7.7",
     "@types/filesystem": "^0.0.32",
     "@types/three": "^0.149.0",

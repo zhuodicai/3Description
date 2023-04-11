@@ -13,6 +13,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 // const communication = require("./communication.js");
 import { setup, loop } from "./communication.js";
 import { recordDef } from "./record.js";
+import { handpose } from "./handpose.js";
 
 let camera, scene, renderer, stats;
 // let sphere, material;
@@ -460,6 +461,7 @@ function animation(msTime) {
 
 init();
 recordDef();
+handpose();
 
 
 // on page load, call the setup function:
