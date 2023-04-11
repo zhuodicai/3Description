@@ -1,8 +1,6 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
 const { HandLandmarker, FilesetResolver } = vision;
 
-const demosSection = document.getElementById("demos");
-
 
 export const handpose = () => {
     let handLandmarker = undefined;
@@ -28,17 +26,18 @@ export const handpose = () => {
             runningMode: runningMode,
             numHands: 2
         });
-        // demosSection.classList.remove("invisible");
     }
     runDemo();
 
     /********************************************************************
-    // Demo 2: Continuously grab image from webcam stream and detect it.
+    // Continuously grab image from webcam stream and detect it.
     ********************************************************************/
 
     const video = document.getElementById("webcam");
     const canvasElement = document.getElementById("output_canvas");
     const canvasCtx = canvasElement.getContext("2d");
+    const canvasElementShape = document.getElementById("shape_canvas");
+    const canvasCtxShape = canvasElementShape.getContext("2d");
 
     // Check if webcam access is supported.
     function hasGetUserMedia() {
@@ -83,6 +82,7 @@ export const handpose = () => {
     }
 
     async function predictWebcam() {
+
         canvasElement.style.height = videoHeight;
         video.style.height = videoHeight;
         canvasElement.style.width = videoWidth;
@@ -100,13 +100,43 @@ export const handpose = () => {
         if (results.landmarks) {
             for (const landmarks of results.landmarks) {
                 drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                    color: "#00FF00",
-                    lineWidth: 5
+                    color: "#ffffff",
+                    lineWidth: 2
                 });
-                drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+                drawLandmarks(canvasCtx, landmarks, { color: "#6200ee", lineWidth: 1 });
             }
         }
         canvasCtx.restore();
+
+        canvasCtxShape.save();
+        canvasCtxShape.fillStyle = "blue";
+        // canvasCtxShape.fillRect(0, 0, canvasElementShape.width, canvasElementShape.height);
+        canvasCtxShape.clearRect(0, 0, canvasElementShape.width, canvasElementShape.height);
+        if (results.landmarks) {
+            if (results.landmarks.length == 2) {
+                canvasCtxShape.beginPath();
+                console.log(results.landmarks[0][4].x);
+                canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][3].x * canvasElement.width, results.landmarks[0][3].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][2].x * canvasElement.width, results.landmarks[0][2].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][5].x * canvasElement.width, results.landmarks[0][5].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][6].x * canvasElement.width, results.landmarks[0][6].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][7].x * canvasElement.width, results.landmarks[0][7].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[0][8].x * canvasElement.width, results.landmarks[0][8].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][8].x * canvasElement.width, results.landmarks[1][8].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][7].x * canvasElement.width, results.landmarks[1][7].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][6].x * canvasElement.width, results.landmarks[1][6].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][5].x * canvasElement.width, results.landmarks[1][5].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][2].x * canvasElement.width, results.landmarks[1][2].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][3].x * canvasElement.width, results.landmarks[1][3].y * canvasElement.height);
+                canvasCtxShape.lineTo(results.landmarks[1][4].x * canvasElement.width, results.landmarks[1][4].y * canvasElement.height);
+                canvasCtxShape.closePath();
+                canvasCtxShape.stroke();
+                canvasCtxShape.fillStyle = "#f4511e";
+                canvasCtxShape.fill();
+            }
+        }
+        // canvasCtxShape.restore();
 
         // Call this function again to keep predicting when the browser is ready.
         if (webcamRunning === true) {

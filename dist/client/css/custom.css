@@ -1,9 +1,27 @@
 .threejs-place {
-    text-align: center;
+    text-align: left;
     justify-content: center;
     align-items: center;
 }
 
 #remote {
-    text-align: center;
+    text-align: left;
+}
+
+video {
+    transform: scale(-1, 1);
+}
+
+.output_canvas {
+    transform: scale(-1, 1);
+}
+
+.shape_canvas {
+    transform: scale(-1, 1);
+    border: solid 1px #ced4da;
+    border-radius: 4px;
+}
+
+h2{
+    color: #6200ee;
 }
