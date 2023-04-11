@@ -52,8 +52,8 @@ export const openAiChat = async (data) => {
     const formData = {
         "model": model,
         "messages": messages,
-        "stop": "4",
-        "max_tokens":2000,
+        // "stop": "4",
+        // "max_tokens":2000,
     }
     console.log("this chat function has been called");
     axios
