@@ -1,3 +1,4 @@
+import { generatePetal, init } from './client';
 import { OPENAI_API_KEY } from './OPENAI_API_KEY';
 const FormData = require("form-data");
 const axios = require("axios");
@@ -23,12 +24,9 @@ export const openAiTranscription = async (data) => {
             const speechResult = response.data.text;
             document.getElementById('record-message').innerHTML = speechResult;//string
             // openAiChat(speechResult);
-            let prompt = "1. Use Three.js to write a 3D petal in an irregular shape. 2. Must starting with const shape = new THREE.Shape(); declare at least 4 curves... 3. Must use THREE.CubicBezierCurve() and THREE.ExtrudeGeometry(). 4. Must ending with shape.curves.push().  5. More requirements are below."
-            // let prompt ="draw a petal's shape with Three.js"
+            // let prompt = "1. Use Three.js to write a 3D petal in an irregular shape. 2. Must starting with const shape = new THREE.Shape(); declare at least 4 curves... 3. Must use THREE.CubicBezierCurve() and THREE.ExtrudeGeometry(). 4. Must ending with shape.curves.push().  5. More requirements are below."
+            let prompt = "0.Provide me with a sample code shell that meets the requirements I listed, DO NOT OUTPUT ANYTHING EXCEPT CODE. 1. Use Three.js to draw a 3D petal's shape. 2. Must start with drawing the bottom of the petal. 3. Must have THREE.Shape(), shape.moveTo(0,0); shape.lineTo() no more than 6 times; ...4. All numbers in shape.lineTo() MUST be in the range of (-5,5); 4. the petal looks like a strawberry";
             openAiChat(prompt + speechResult);
-            // let prompt ="draw a petal's shape with Three.js"
-            // openAiChat(prompt);
-            //document.getElementById('textToCode').innerHTML = "<button>This is a new button</button>";
         })
         .catch((error) => {
             console.error(error);
@@ -67,13 +65,44 @@ export const openAiChat = async (data) => {
         .then((response) => {
             console.log("response",response);
             const responseChoices = response.data.choices[0].message.content;
-            console.log(responseChoices);
             document.getElementById('respond-message').innerHTML = responseChoices;
+            regexResponse(responseChoices);
             //document.getElementById('textToCode').innerHTML = "<button>This is a new button</button>";
         })
         .catch((error) => {
             console.error(error);
             // console.log(error.)
         });
+}
+
+function regexResponse(response) {
+    console.log(response);
+    const fakeresponse = "var shape = new THREE.Shape();"+
+    "shape.moveTo(0, 0);"+
+    "shape.lineTo(-2, -3);"+
+    "shape.lineTo(-4, -2);"+
+    "shape.lineTo(-5, 0);"+
+    "shape.lineTo(-4, 2);"+
+    "shape.lineTo(-2, 3);"+
+    "shape.lineTo(0, 0);"
+    changePoint(fakeresponse);
+}
+
+function changePoint(newCode) {
+    var functionText = generatePetal.toString();
+    functionText = functionText.replaceAll("three__WEBPACK_IMPORTED_MODULE_3__", "THREE");
+    functionText = functionText.replace("var shape = new THREE.Shape();"+
+    "const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2));"+
+    "const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4));"+
+    "const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2));"+
+    "const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0));"+
+    "shape.curves.push(curve1, curve2, curve3, curve4);",
+    newCode);
+    // console.log(functionText);
+    functionText = new Function("handShape", functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
+    // console.log(functionText);
+    const petalGroup = functionText("");
+    // console.log(petalGroup);
+    init(petalGroup);
 }
 

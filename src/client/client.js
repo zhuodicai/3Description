@@ -2,21 +2,14 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-// import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
-// import { CatmullRomCurve3 } from 'three';
-// import { NURBSCurve } from 'three/addons/curves/NURBSCurve.js';
-// import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
-// import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-// const communication = require("./communication.js");
 import { setup, loop } from "./communication.js";
 import { recordDef } from "./record.js";
 import { handpose } from "./handpose.js";
 
 let camera, scene, renderer, stats;
-// let sphere, material;
 const params = {
     exportToObj: exportToObj
 };
@@ -27,18 +20,16 @@ let cubeCamera, cubeRenderTarget;
 
 let controls;
 
-let containerWidth = document.getElementById("container").offsetWidth;
-
-function init() {
-
-
+function prepare() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth / 1.4, window.innerHeight / 1.4);
     renderer.setAnimationLoop(animation);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    document.body.appendChild(renderer.domElement);
+    const container = document.getElementById( 'canvas-threejs' );
+    document.body.appendChild( container );
+    container.appendChild( renderer.domElement );
 
     renderer.domElement.style.display = 'block'; // 让 canvas 元素变成块级元素
     renderer.domElement.style.margin = 'auto'; // 设置 margin 居中对齐
@@ -72,22 +63,6 @@ function init() {
 
     cubeCamera = new THREE.CubeCamera(1, 1000, cubeRenderTarget);
 
-    /* SPHERE TEST */
-
-    // material = new THREE.MeshStandardMaterial({
-    //     envMap: cubeRenderTarget.texture,
-    //     roughness: 0.05,
-    //     metalness: 1
-    // });
-
-    // const gui = new GUI();
-    // gui.add(material, 'roughness', 0, 1);
-    // gui.add(material, 'metalness', 0, 1);
-    // gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
-
-    // sphere = new THREE.Mesh(new THREE.IcosahedronGeometry(15, 8), material);
-    // scene.add(sphere);
-
     /* GUI */
     const gui = new GUI();
     gui.add(params, 'exportToObj').name('Export OBJ');
@@ -96,103 +71,15 @@ function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.autoRotate = false;
+}
 
-    /* FLOWER */
+export function init(petalGroup) {
 
-    /* 1. PETAL */
-    const shape = new THREE.Shape();
-
-    const curve1 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(0, 0.5),
-        new THREE.Vector2(-1, 1),
-        new THREE.Vector2(-1, 2)
-    );
-
-    const curve2 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(-1, 2),
-        new THREE.Vector2(-1, 3),
-        new THREE.Vector2(-0.5, 4),
-        new THREE.Vector2(0, 4)
-    );
-
-    const curve3 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 4),
-        new THREE.Vector2(0.5, 4),
-        new THREE.Vector2(1, 3),
-        new THREE.Vector2(1, 2)
-    );
-
-    const curve4 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(1, 2),
-        new THREE.Vector2(1, 1),
-        new THREE.Vector2(0, 0.5),
-        new THREE.Vector2(0, 0)
-    );
-
-    shape.curves.push(curve1, curve2, curve3, curve4);
-
-
-    // 创建一个3D mesh
-    var geometry = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.3, // 花瓣厚度
-        // bevelEnabled: false, //倒角
-        // bevelThickness: 2, //倒角厚度值（默认6）
-        // bevelSize:2, //距离形状轮廓多远的斜面距离（默认为 2）
-        // bevelSegments:3, //斜角步数（默认3）
-        // steps: 20,
-        bevelEnabled: false,
-        // extrudePath: path,
-        // taper: function (u) {
-        //     return 1 - Math.sin(u * Math.PI) * 0.5; // Taper the extrusion along the curve
-        // },
-    });
-
-    // 创建纹理
-    var petalTexture = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_BaseColor.png');
-    var petalRoughness = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Roughness.png');
-    var petalNormal = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Normal.png');
-    petalTexture.wrapS = THREE.RepeatWrapping;
-    petalTexture.wrapT = THREE.RepeatWrapping;
-    petalTexture.repeat.set(10, 10);
-    petalRoughness.wrapS = THREE.RepeatWrapping;
-    petalRoughness.wrapT = THREE.RepeatWrapping;
-    petalRoughness.repeat.set(10, 10);
-    // petalNormal.wrapS = THREE.RepeatWrapping;
-    // petalNormal.wrapT = THREE.RepeatWrapping;
-    // petalNormal.repeat.set(10, 10);
-
-    // 创建材质
-    var material = new THREE.MeshStandardMaterial({
-        map: petalTexture, // 纹理贴图
-        roughnessMap: petalRoughness, // 纹理粗糙度
-        normalMap: petalNormal, // 纹理粗糙度
-        // color: "pink", // 颜色
-        side: THREE.DoubleSide,
-    });
-
-    // 创建花瓣mesh
-    var petal = new THREE.Mesh(geometry, material);
-    let rotx = document.getElementById('remote').innerHTML;
-    console.log(rotx);
-    const petalGroup = new THREE.Group();
-    for (let i = 0; i < 6; i++) {
-        const petalClone = petal.clone();
-        //rotation.x是set to哪里, rotateX是基于当前rotate多少
-        console.log(petalClone.rotation);
-        petalClone.rotation.x = -Math.PI / 2; // 旋转90度，使其处于水平状态
-        console.log(petalClone.rotation);
-        petalClone.rotateZ((Math.PI / 3) * i); // 控制花瓣复制时以Z为旋转轴的旋转角度，即使上面已经旋转了，仍沿用初始状态时的坐标系\    
-        console.log(petalClone.rotation);
-        petalClone.rotateX(Math.PI / 2); // 控制花瓣开合程度，2花苞，20基本完全开放.对应accelerometer z=0垂直于地面，z=1平行于地面
-        console.log(petalClone.rotation);
-        petalClone.position.y = 0;
-        petalGroup.add(petalClone);
-        console.log("asdf")
+    if (scene.getObjectByName(petalGroup.name)) {
+        var selectedObject = scene.getObjectByName(petalGroup.name);
+        scene.remove(selectedObject);
     }
-    petalGroup.name = "petals";
-    console.log("petalGroup:", petalGroup);
-
+    /* FLOWER */
 
     /* 2. SEPAL */
     // Create a group to hold the sepal parts
@@ -459,10 +346,64 @@ function animation(msTime) {
     }
 }
 
-init();
 recordDef();
 handpose();
 
+export function generatePetal(handShape = null) {
+    var shape = new THREE.Shape();const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2));const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4));const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2));const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0));shape.curves.push(curve1, curve2, curve3, curve4);
+
+    // 创建一个3D mesh
+    var geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 0.3, 
+        bevelEnabled: false,
+    });
+
+    if (handShape) {
+        geometry = new THREE.ExtrudeGeometry(handShape, {
+            depth: 0.3, 
+            bevelEnabled: false,
+        });
+    }
+
+    // 创建纹理
+    var petalTexture = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_BaseColor.png');
+    var petalRoughness = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Roughness.png');
+    var petalNormal = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Normal.png');
+    petalTexture.wrapS = THREE.RepeatWrapping;
+    petalTexture.wrapT = THREE.RepeatWrapping;
+    petalTexture.repeat.set(10, 10);
+    petalRoughness.wrapS = THREE.RepeatWrapping;
+    petalRoughness.wrapT = THREE.RepeatWrapping;
+    petalRoughness.repeat.set(10, 10);
+
+    // 创建材质
+    var material = new THREE.MeshStandardMaterial({
+        map: petalTexture, // 纹理贴图
+        roughnessMap: petalRoughness, // 纹理粗糙度
+        normalMap: petalNormal, // 纹理粗糙度
+        // color: "pink", // 颜色
+        side: THREE.DoubleSide,
+    });
+
+    // 创建花瓣mesh
+    var petal = new THREE.Mesh(geometry, material);
+    const petalGroup = new THREE.Group();
+    for (let i = 0; i < 6; i++) {
+        const petalClone = petal.clone();
+        petalClone.rotation.x = -Math.PI / 2; 
+        petalClone.rotateZ((Math.PI / 3) * i);
+        petalClone.rotateX(Math.PI / 2);
+        petalClone.position.y = 0;
+        petalGroup.add(petalClone);
+    }
+    petalGroup.name = "petals";
+
+    return petalGroup;
+}
+
+const petalGroup = generatePetal();
+prepare();
+init(petalGroup);
 
 // on page load, call the setup function:
 document.addEventListener('DOMContentLoaded', setup());

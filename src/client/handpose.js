@@ -1,4 +1,5 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
+import { generatePetal, init } from "./client.js";
 const { HandLandmarker, FilesetResolver } = vision;
 
 
@@ -114,8 +115,26 @@ export const handpose = () => {
         canvasCtxShape.clearRect(0, 0, canvasElementShape.width, canvasElementShape.height);
         if (results.landmarks) {
             if (results.landmarks.length == 2) {
+                const handShape = new THREE.Shape();
+                console.log(results.landmarks)
+                handShape.moveTo(0, 0);
+                handShape.lineTo(results.landmarks[0][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][3].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][2].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][5].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][6].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][7].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][8].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][8].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][7].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][6].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][5].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10- results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10- results.landmarks[0][4].y * 10));
+                const petalGroup = generatePetal(handShape);
+                init(petalGroup);
+
                 canvasCtxShape.beginPath();
-                console.log(results.landmarks[0][4].x);
                 canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);
                 canvasCtxShape.lineTo(results.landmarks[0][3].x * canvasElement.width, results.landmarks[0][3].y * canvasElement.height);
                 canvasCtxShape.lineTo(results.landmarks[0][2].x * canvasElement.width, results.landmarks[0][2].y * canvasElement.height);
