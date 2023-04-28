@@ -30,7 +30,8 @@ export const openAiTranscription = async (data, type) => {
                 openAiChat(prompt + speechResult);
             } else if (type === "color") {
                 document.getElementById("record-message-color").innerHTML = speechResult;
-                changeSepalColor(speechResult.substring(0, speechResult.length - 1));
+                let prompt = "0.provide me the html css color based on the description. 1." + speechResult;
+                openAiChat(prompt + speechResult, "color");
             }
            
         })
@@ -40,7 +41,7 @@ export const openAiTranscription = async (data, type) => {
 }
 
 
-export const openAiChat = async (data) => {
+export const openAiChat = async (data, type="code") => {
     const model = "gpt-3.5-turbo";
     const messages = [
         {
@@ -63,9 +64,13 @@ export const openAiChat = async (data) => {
         })
         .then((response) => {
             const responseChoices = response.data.choices[0].message.content;
-            document.getElementById('respond-message').innerHTML = responseChoices;
-            regexResponse(responseChoices);
-            
+            if (type === "code") {
+                document.getElementById('respond-message').innerHTML = responseChoices;
+                regexResponse(responseChoices);
+            } else if (type === "color") {
+                document.getElementById('respond-message-color').innerHTML = responseChoices;
+                changeSepalColor(responseChoices);
+            }
         })
         .catch((error) => {
             console.error(error);
