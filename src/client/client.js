@@ -73,77 +73,18 @@ function prepare() {
     controls.autoRotate = false;
 }
 
-export function init(petalGroup) {
+export function init(petalGroup, sepalGroup) {
 
     if (scene.getObjectByName(petalGroup.name)) {
         var selectedObject = scene.getObjectByName(petalGroup.name);
         scene.remove(selectedObject);
     }
+    if (scene.getObjectByName(sepalGroup.name)) {
+        var selectedObject = scene.getObjectByName(sepalGroup.name);
+        scene.remove(selectedObject);
+    }
     /* FLOWER */
 
-    /* 2. SEPAL */
-    // Create a group to hold the sepal parts
-    const sepalGroup = new THREE.Group();
-
-    // Create the sepal
-    const sepalShape = new THREE.Shape();
-    // sepalShape.moveTo(0, 0);
-    // sepalShape.lineTo(1, 2);
-    // sepalShape.lineTo(2, 2);
-    // sepalShape.lineTo(3, 0);
-    // sepalShape.lineTo(2, -2);
-    // sepalShape.lineTo(1, -2);
-    // sepalShape.lineTo(0, 0);
-    // Define the curves
-    const sepalCurve1 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(-0.2, 1),
-        new THREE.Vector2(-1, 2),
-        new THREE.Vector2(-1.2, 4)
-    );
-
-    const sepalCurve2 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(-1.2, 4),
-        new THREE.Vector2(-1, 5),
-        new THREE.Vector2(0, 6),
-        new THREE.Vector2(0.8, 5)
-    );
-
-    const sepalCurve3 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0.8, 5),
-        new THREE.Vector2(1, 4),
-        new THREE.Vector2(0.5, 2),
-        new THREE.Vector2(0, 0)
-    );
-
-    const sepalCurve4 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(0.2, -1),
-        new THREE.Vector2(1, -2),
-        new THREE.Vector2(1.2, -4)
-    );
-    // Add the curves to the shape
-    sepalShape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
-    const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.5, bevelEnabled: false });
-    const sepalMaterial = new THREE.MeshStandardMaterial({ color: 0x228b22 });
-    const sepalMesh = new THREE.Mesh(sepalGeometry, sepalMaterial);
-    // sepalMesh.rotation.x = -Math.PI / 2; // 旋转90度，使其处于水平状态
-    // sepalMesh.rotateY(-Math.PI / 5); 
-    // sepalGroup.add(sepalMesh);
-
-    for (let i = 0; i < 6; i++) {
-        const sepalMeshClone = sepalMesh.clone();
-        //rotation.x是set to哪里, rotateX是基于当前rotate多少
-        sepalMeshClone.rotation.x = -Math.PI / 2; // 旋转90度，使其处于水平状态
-        sepalMeshClone.rotateZ((Math.PI / 3) * i); // 控制花萼复制时以Z为旋转轴的旋转角度，即使上面已经旋转了，仍沿用初始状态时的坐标系
-        // sepalMeshClone.rotateY(-Math.PI / 20);
-        sepalMeshClone.rotateY(-Math.PI / 5); //控制花萼开合程度，5适合花苞，20适合基本完全开放.对应accelerometer z=0垂直于地面，z=1平行于地面
-        sepalMeshClone.position.y = 0;
-        sepalGroup.add(sepalMeshClone);
-    }
-    sepalGroup.position.set(0, -1, 0);
-    sepalGroup.name = "sepals";
-    console.log("sepalGroup:", sepalGroup);
 
     /* 3. STEM */
     const stemGeometry = new THREE.CylinderGeometry(0.2, 0.3, 10);
@@ -234,7 +175,6 @@ export function init(petalGroup) {
 
     /* ADD AND ADJUST ALL COMPONENTS */
     petalGroup.scale.set(2, 2, 2);
-    sepalGroup.position.set(0, -0.3, 0);
     // pistilGroup.scale.set(0.5, 0.5, 0.5);
     scene.add(petalGroup);
     scene.add(sepalGroup);
@@ -338,11 +278,6 @@ function animation(msTime) {
             }
         }
 
-
-        // console.log(scene.children);
-
-        // stats.update();
-
     }
 }
 
@@ -401,9 +336,69 @@ export function generatePetal(handShape = null) {
     return petalGroup;
 }
 
+export function generateSepal() {
+    /* 2. SEPAL */
+    // Create a group to hold the sepal parts
+    const sepalGroup = new THREE.Group();
+
+    // Create the sepal
+    const sepalShape = new THREE.Shape();
+    // Define the curves
+    const sepalCurve1 = new THREE.CubicBezierCurve(
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(-0.2, 1),
+        new THREE.Vector2(-1, 2),
+        new THREE.Vector2(-1.2, 4)
+    );
+
+    const sepalCurve2 = new THREE.CubicBezierCurve(
+        new THREE.Vector2(-1.2, 4),
+        new THREE.Vector2(-1, 5),
+        new THREE.Vector2(0, 6),
+        new THREE.Vector2(0.8, 5)
+    );
+
+    const sepalCurve3 = new THREE.CubicBezierCurve(
+        new THREE.Vector2(0.8, 5),
+        new THREE.Vector2(1, 4),
+        new THREE.Vector2(0.5, 2),
+        new THREE.Vector2(0, 0)
+    );
+
+    const sepalCurve4 = new THREE.CubicBezierCurve(
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(0.2, -1),
+        new THREE.Vector2(1, -2),
+        new THREE.Vector2(1.2, -4)
+    );
+    // Add the curves to the shape
+    sepalShape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
+    const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.5, bevelEnabled: false });
+    const sepalMaterial = new THREE.MeshStandardMaterial({ color: "green" });
+    const sepalMesh = new THREE.Mesh(sepalGeometry, sepalMaterial);
+
+    for (let i = 0; i < 6; i++) {
+        const sepalMeshClone = sepalMesh.clone();
+        //rotation.x是set to哪里, rotateX是基于当前rotate多少
+        sepalMeshClone.rotation.x = -Math.PI / 2; // 旋转90度，使其处于水平状态
+        sepalMeshClone.rotateZ((Math.PI / 3) * i); // 控制花萼复制时以Z为旋转轴的旋转角度，即使上面已经旋转了，仍沿用初始状态时的坐标系
+        sepalMeshClone.rotateY(-Math.PI / 5); //控制花萼开合程度，5适合花苞，20适合基本完全开放.对应accelerometer z=0垂直于地面，z=1平行于地面
+        sepalMeshClone.position.y = 0;
+        sepalGroup.add(sepalMeshClone);
+    }
+    
+    sepalGroup.name = "sepals";
+    sepalGroup.position.set(0, -0.3, 0);
+
+    console.log("sepalGroup:", sepalGroup);
+    return sepalGroup;
+}
+
 const petalGroup = generatePetal();
+const sepalGroup = generateSepal();
+
 prepare();
-init(petalGroup);
+init(petalGroup, sepalGroup);
 
 // on page load, call the setup function:
 document.addEventListener('DOMContentLoaded', setup());

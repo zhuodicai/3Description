@@ -33,11 +33,11 @@
 				<p>Please use below buttons to record your message.</p>
 				<div class="row">
 					<div class="col">
-						<button type="button" id=record enabled class="mdc-button mdc-button--raised">
+						<button type="button" id="record" enabled class="mdc-button mdc-button--raised">
 							<span class="mdc-button__ripple"></span>
 							<span class="mdc-button__label">RECORD</span>
 						</button>
-						<button type="button" id=stopRecord disabled class="mdc-button mdc-button--raised">
+						<button type="button" id="stopRecord" disabled class="mdc-button mdc-button--raised">
 							<span class="mdc-button__ripple"></span>
 							<span class="mdc-button__label">STOP</span>
 						</button>
@@ -61,6 +61,35 @@
 		<div class="mb-3">
 			<label for="respond-message-label" class="form-label">Respond message:</label>
 			<textarea class="form-control" id="respond-message" rows="3"></textarea>
+		</div>
+
+		<h3>❸ Change Sepal Color</h3>
+		<div class="row">
+			<div class="col-6">
+				<p>Please use below buttons to record the color you want to set for sepals</p>
+				<div class="row">
+					<div class="col">
+						<button type="button" id="recordColor" enabled class="mdc-button mdc-button--raised">
+							<span class="mdc-button__ripple"></span>
+							<span class="mdc-button__label">RECORD</span>
+						</button>
+						<button type="button" id="stopRecordColor" disabled class="mdc-button mdc-button--raised">
+							<span class="mdc-button__ripple"></span>
+							<span class="mdc-button__label">STOP</span>
+						</button>
+					</div>
+					<div class="col">
+						<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="col-6">
+				<div class="mb-3">
+					<label for="record-message-label" class="form-label">Recorded message:</label>
+					<textarea class="form-control" id="record-message" rows="2"></textarea>
+				</div>
+			</div>
 		</div>
 
 		<h2>✋ Gesture Description</h2>
