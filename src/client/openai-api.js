@@ -79,15 +79,27 @@ export const openAiChat = async (data, type="code") => {
 
 function regexResponse(response) {
     console.log(response);
-    const fakeresponse = "var shape = new THREE.Shape();"+
-    "shape.moveTo(0, 0);"+
-    "shape.lineTo(-2, -3);"+
-    "shape.lineTo(-4, -2);"+
-    "shape.lineTo(-5, 0);"+
-    "shape.lineTo(-4, 2);"+
-    "shape.lineTo(-2, 3);"+
-    "shape.lineTo(0, 0);"
-    changePoint(fakeresponse);
+
+    let result = "var shape = new THREE.Shape();";
+    const regexMoveTo = /shape.move.*/g;
+    result += response.match(regexMoveTo);
+    const regexLineTo = /shape.line.*/g;
+    const lineToResult = [...response.matchAll(regexLineTo)];
+    lineToResult.forEach((ele) => {
+        console.log(ele[0]);
+        result += ele[0];
+    });
+    console.log("regex result ", result);
+
+    // const fakeresponse = "var shape = new THREE.Shape();"+
+    // "shape.moveTo(0, 0);"+
+    // "shape.lineTo(-2, -3);"+
+    // "shape.lineTo(-4, -2);"+
+    // "shape.lineTo(-5, 0);"+
+    // "shape.lineTo(-4, 2);"+
+    // "shape.lineTo(-2, 3);"+
+    // "shape.lineTo(0, 0);"
+    changePoint(result);
 }
 
 function changePoint(newCode) {
