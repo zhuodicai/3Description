@@ -222,9 +222,8 @@ function animation(msTime) {
 
     renderer.render(scene, camera);
     let rotx = parseFloat(document.getElementById("remote").innerHTML);
-    rotx = Math.min(Math.max(rotx, 0), 1);
-
-    // rotx = 2 + rotx * (20-2);
+    // rotx = Math.min(Math.max(rotx, 0), 1);
+    rotx = 0.6;
 
     if (!isNaN(rotx)) {
         for (const group of scene.children) {

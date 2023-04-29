@@ -1,5 +1,5 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
-import { generatePetal, init } from "./client.js";
+import { generatePetal, generateSepal, init } from "./client.js";
 const { HandLandmarker, FilesetResolver } = vision;
 
 
@@ -132,7 +132,8 @@ export const handpose = () => {
                 handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10- results.landmarks[0][4].y * 10));
                 handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10- results.landmarks[0][4].y * 10));
                 const petalGroup = generatePetal(handShape);
-                init(petalGroup);
+                const sepalGroup = generateSepal();
+                init(petalGroup, sepalGroup);
 
                 canvasCtxShape.beginPath();
                 canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);
