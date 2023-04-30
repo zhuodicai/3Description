@@ -20,27 +20,36 @@ let cubeCamera, cubeRenderTarget;
 
 let controls;
 
+let container
+
 function prepare() {
+
+    container = document.getElementById('canvas-threejs');
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth / 1.4, window.innerHeight / 1.4);
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setAnimationLoop(animation);
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    const container = document.getElementById( 'canvas-threejs' );
-    document.body.appendChild( container );
-    container.appendChild( renderer.domElement );
+    const canvas = renderer.domElement;
+    document.getElementById("threejs-place").appendChild(container);
+    container.appendChild(canvas);
+    canvas.style.display = 'block'; // 让 canvas 元素变成块级元素
+    canvas.style.margin = 'auto'; // center canvas horizontally
+    // canvas.width = container.clientWidth;
+    // canvas.height = container.clientHeight;
 
-    renderer.domElement.style.display = 'block'; // 让 canvas 元素变成块级元素
-    renderer.domElement.style.margin = 'auto'; // 设置 margin 居中对齐
+    // 让canvas在container里不要出去
+    canvas.style.width = container.clientWidth + 'px';
+    canvas.style.height = container.clientHeight + 'px';
 
     window.addEventListener('resize', onWindowResized);
 
     // stats = new Stats();
     // document.body.appendChild(stats.dom);
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 25;
+    camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 1, 1000);
+    camera.position.z = 20;
 
     scene = new THREE.Scene();
     scene.rotation.y = 0.5; // avoid flying objects occluding the sun
@@ -205,10 +214,9 @@ function exportToObj() {
 
 function onWindowResized() {
 
-    renderer.setSize(window.innerWidth / 1.4, window.innerHeight / 1.4);
-
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
 
 }
 
@@ -221,9 +229,9 @@ function animation(msTime) {
     controls.update();
 
     renderer.render(scene, camera);
-    let rotx = parseFloat(document.getElementById("remote").innerHTML);
-    // rotx = Math.min(Math.max(rotx, 0), 1);
-    rotx = 0.6;
+    // let rotx = parseFloat(document.getElementById("remote").innerHTML);
+    // let rotx = Math.min(Math.max(rotx, 0), 1);
+    let rotx = 0.6;
 
     if (!isNaN(rotx)) {
         for (const group of scene.children) {
@@ -284,17 +292,17 @@ recordDef();
 handpose();
 
 export function generatePetal(handShape = null) {
-    var shape = new THREE.Shape();const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2));const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4));const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2));const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0));shape.curves.push(curve1, curve2, curve3, curve4);
+    var shape = new THREE.Shape(); const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);
 
     // 创建一个3D mesh
     var geometry = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.3, 
+        depth: 0.3,
         bevelEnabled: false,
     });
 
     if (handShape) {
         geometry = new THREE.ExtrudeGeometry(handShape, {
-            depth: 0.3, 
+            depth: 0.3,
             bevelEnabled: false,
         });
     }
@@ -324,7 +332,7 @@ export function generatePetal(handShape = null) {
     const petalGroup = new THREE.Group();
     for (let i = 0; i < 6; i++) {
         const petalClone = petal.clone();
-        petalClone.rotation.x = -Math.PI / 2; 
+        petalClone.rotation.x = -Math.PI / 2;
         petalClone.rotateZ((Math.PI / 3) * i);
         petalClone.rotateX(Math.PI / 2);
         petalClone.position.y = 0;
@@ -385,7 +393,7 @@ export function generateSepal() {
         sepalMeshClone.position.y = 0;
         sepalGroup.add(sepalMeshClone);
     }
-    
+
     sepalGroup.name = "sepals";
     sepalGroup.position.set(0, -0.3, 0);
 
@@ -399,7 +407,11 @@ const sepalGroup = generateSepal();
 prepare();
 init(petalGroup, sepalGroup);
 
+////////////////////
+
+/* IoT! This part has been hidded! */
 // on page load, call the setup function:
-document.addEventListener('DOMContentLoaded', setup());
+// document.addEventListener('DOMContentLoaded', setup());
 // run a loop every 2 seconds:
-setInterval(loop(), 2000);
+// setInterval(loop(), 2000);
+
