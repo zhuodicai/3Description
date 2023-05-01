@@ -1,4 +1,4 @@
-import { generateSepal, generatePetal, init, UpdatePetalSet, petalGroup, sepalGroup, UpdateSepalGroup, petalFunctionText } from "./client";
+import { generatePetal, generateSepal, init, petalGroup, sepalGroup, UpdatePetalGroup, UpdateSepalGroup, petalFunctionText,sepalFunctionText } from "./client";
 
 
 export const changePetalColor = (description) => {
@@ -15,8 +15,8 @@ export const changePetalColor = (description) => {
 
     functionText = new Function("handShape", functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
     const petalGroup = functionText("");
-    UpdatePetalGroup(petalGroup, functionText);
 
+    UpdatePetalGroup(petalGroup, functionText);
     init(petalGroup, sepalGroup);
 }
 
@@ -30,8 +30,8 @@ export const changeSepalColor = (description) => {
     "const sepalMaterial = new THREE.MeshStandardMaterial({ color:\"" + hexColor + "\"});");
     console.log(functionText);
     functionText = new Function(functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
-    const sepalGroup = functionText();
-    UpdateSepalGroup(sepalGroup);
+    const sepalGroup = functionText("");
 
+    UpdateSepalGroup(sepalGroup, functionText);
     init(petalGroup, sepalGroup);
 }

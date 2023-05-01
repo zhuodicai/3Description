@@ -1,4 +1,4 @@
-import { generatePetal, init, sepalGroup, UpdatePetalSet, petalFunctionText } from './client';
+import { generatePetal, init, sepalGroup, UpdatePetalGroup, petalFunctionText } from './client';
 import { changePetalColor, changeSepalColor } from './color';
 import { OPENAI_API_KEY } from './OPENAI_API_KEY';
 const FormData = require("form-data");
@@ -139,9 +139,9 @@ function changePoint(newCode) {
     console.log("change point", functionText);
     
     functionText = new Function("handShape", functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
-    
     const petalGroup = functionText("");
-    UpdatePetalSet(petalGroup, functionText);
+    
+    UpdatePetalGroup(petalGroup, functionText);
     init(petalGroup, sepalGroup);
 }
 

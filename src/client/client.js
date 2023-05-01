@@ -26,8 +26,9 @@ let container;
 
 // parts of flower group for THREE
 export let petalGroup;
-export let petalFunctionText = "";
 export let sepalGroup;
+export let petalFunctionText = "";
+export let sepalFunctionText = "";
 
 function prepare() {
 
@@ -399,13 +400,14 @@ export function generateSepal() {
     return sepalGroup;
 }
 
-export function UpdatePetalSet(newPetalGroup, newFuntionText) {
+export function UpdatePetalGroup(newPetalGroup, newFuntionText) {
     petalGroup = newPetalGroup;
     petalFunctionText = newFuntionText;
 }
 
-export function UpdateSepalGroup(newSepalGroup) {
+export function UpdateSepalGroup(newSepalGroup, newFuntionText) {
     sepalGroup = newSepalGroup;
+    sepalFunctionText = newFuntionText;
 }
 
 petalGroup = generatePetal();
