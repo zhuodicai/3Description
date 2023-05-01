@@ -1,5 +1,7 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
-import { generatePetal, generateSepal, init } from "./client.js";
+
+import { generatePetal, init, sepalGroup, UpdatePetalGroup } from "./client";
+
 const { HandLandmarker, FilesetResolver } = vision;
 
 
@@ -118,23 +120,22 @@ export const handpose = () => {
                 const handShape = new THREE.Shape();
                 console.log(results.landmarks)
                 handShape.moveTo(0, 0);
-                handShape.lineTo(results.landmarks[0][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][3].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][2].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][5].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][6].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][7].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][8].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][8].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][7].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][6].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][5].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10- results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10- results.landmarks[0][4].y * 10));
-                // generatePetal(handShape);
-                // petalGroup = generatePetal(handShape);
-                // const sepalGroup = generateSepal();
-                // init(petalGroup, sepalGroup);
+                handShape.lineTo(results.landmarks[0][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][3].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][2].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][5].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][6].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][7].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[0][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][8].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][8].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][7].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][6].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][5].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10 - results.landmarks[0][4].y * 10));
+                handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10 - results.landmarks[0][4].y * 10));
+                const petalGroup = generatePetal(handShape);
+                UpdatePetalGroup(petalGroup);
+                init(petalGroup, sepalGroup);
 
                 canvasCtxShape.beginPath();
                 canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);

@@ -26,7 +26,8 @@ export const openAiTranscription = async (data, type) => {
             if (type === "code") {
                 document.getElementById('record-message').innerHTML = speechResult; // string
                 // let prompt = "1. Use Three.js to write a 3D petal in an irregular shape. 2. Must starting with const shape = new THREE.Shape(); declare at least 4 curves... 3. Must use THREE.CubicBezierCurve() and THREE.ExtrudeGeometry(). 4. Must ending with shape.curves.push().  5. More requirements are below."
-                let prompt = "0.Provide me with a sample code shell that meets the requirements I listed, DO NOT OUTPUT ANYTHING EXCEPT CODE. 1. Use Three.js to draw a 3D petal's shape. 2. Must start with drawing the bottom of the petal. 3. Must have THREE.Shape(), shape.moveTo(0,0); shape.lineTo() no more than 6 times; ...4. All numbers in shape.lineTo() MUST be in the range of (-5,5); 4. the petal looks like a strawberry";
+                // let prompt = "0.Provide me with a sample code shell that meets the requirements I listed, DO NOT OUTPUT ANYTHING EXCEPT CODE. 1. Use Three.js to draw a 3D petal's shape. 2. Must start with drawing the bottom of the petal. 3. Must have THREE.Shape(), shape.moveTo(0,0); shape.lineTo() no more than 6 times; ...4. All numbers in shape.lineTo() MUST be in the range of (-5,5); 4. the petal looks like a strawberry";
+                let prompt = "0.Provide me with a sample code shell that meets the requirements I listed, DO NOT OUTPUT ANYTHING EXCEPT CODE. 1. Use Three.js to draw a 3D petal's shape. 2. Must start with drawing the bottom of the petal. 3. Must have THREE.Shape(), shape.moveTo(0,0); shape.lineTo() no more than 6 times; ...4. All numbers in shape.lineTo() MUST be in the range of (-5,5); 4.";
                 openAiChat(prompt + speechResult);
             } else if (type === "color") {
                 document.getElementById("record-message-color").innerHTML = speechResult;

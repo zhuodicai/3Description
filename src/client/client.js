@@ -324,7 +324,7 @@ export function generatePetal(handShape = null) {
     // petalRoughness.repeat.set(10, 10);
 
     // 创建材质
-    var material = new THREE.MeshStandardMaterial({ color: "salmon", side: THREE.DoubleSide});
+    var material = new THREE.MeshStandardMaterial({ color: "salmon", side: THREE.DoubleSide });
 
     // 创建花瓣mesh
     var petal = new THREE.Mesh(geometry, material);
@@ -379,6 +379,7 @@ export function generateSepal() {
     );
     // Add the curves to the shape
     sepalShape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
+
     const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.8, bevelEnabled: false });
     const sepalMaterial = new THREE.MeshStandardMaterial({ color: "green" });
     const sepalMesh = new THREE.Mesh(sepalGeometry, sepalMaterial);
@@ -400,14 +401,19 @@ export function generateSepal() {
     return sepalGroup;
 }
 
-export function UpdatePetalGroup(newPetalGroup, newFuntionText) {
+export function UpdatePetalGroup(newPetalGroup, newFuntionText = null) {
     petalGroup = newPetalGroup;
-    petalFunctionText = newFuntionText;
+    if (newFuntionText) {
+        petalFunctionText = newFuntionText;
+    }
+
 }
 
-export function UpdateSepalGroup(newSepalGroup, newFuntionText) {
+export function UpdateSepalGroup(newSepalGroup, newFuntionText = null) {
     sepalGroup = newSepalGroup;
-    sepalFunctionText = newFuntionText;
+    if (newFuntionText) {
+        sepalFunctionText = newFuntionText;
+    }
 }
 
 petalGroup = generatePetal();

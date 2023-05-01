@@ -1,3 +1,8 @@
+* {
+    font-family: Roboto, sans-serif;
+    /* letter-spacing: 0.875rem; */
+}
+
 .threejs-place {
     /* text-align: left;
     justify-content: center;
@@ -114,6 +119,28 @@ h2 {
     position: relative;
     right: 0px;
 }
-.lil-gui.root{
+
+.lil-gui.root {
     width: 100%;
+}
+
+/* button */
+/* :root,
+.mdc-button {
+    --mdc-theme-primary: #000000;
+} */
+
+
+input[type='radio'] {
+    box-sizing: border-box;
+    appearance: none;
+    background: white;
+    outline: 1px solid rgb(0, 0, 0);
+    border: 7px solid white;
+    width: 10px;
+    height: 10px;
+}
+
+input[type='radio']:checked {
+    background: rgb(0, 0, 0);
 }

@@ -96,17 +96,17 @@
 						<li class="nav-item" role="presentation">
 							<button class="nav-link active" id="pills-shape-tab" data-bs-toggle="pill"
 								data-bs-target="#pills-shape" type="button" role="tab" aria-controls="pills-shape"
-								aria-selected="true">Shape</button>
+								aria-selected="true">SHAPE</button>
 						</li>
 						<li class="nav-item" role="presentation">
 							<button class="nav-link" id="pills-position-tab" data-bs-toggle="pill"
 								data-bs-target="#pills-position" type="button" role="tab" aria-controls="pills-position"
-								aria-selected="false">Position</button>
+								aria-selected="false">POSITION</button>
 						</li>
 						<li class="nav-item" role="presentation">
 							<button class="nav-link" id="pills-color-tab" data-bs-toggle="pill"
 								data-bs-target="#pills-color" type="button" role="tab" aria-controls="pills-color"
-								aria-selected="false">Color</button>
+								aria-selected="false">COLOR</button>
 						</li>
 					</ul>
 				</div>
@@ -163,7 +163,7 @@
 									<span class="mdc-button__ripple"></span>
 									<span class="mdc-button__label">ENABLE WEBCAM</span>
 								</button>
-								<div class="row">
+								<div class="row" style="padding: 7.5px;">
 									<div class="col-6">
 										<video id="webcam" style="position: absolute" autoplay playsinline></video>
 										<canvas id="output_canvas" class="output_canvas"
@@ -195,7 +195,8 @@
 						tabindex="0">
 						<h3 id="color-title">Petal Color Adjustment</h3>
 						<h4>> Verbal Description</h4>
-						<p>Please use below buttons to record the color you want to set for sepals</p>
+						<h5>❶ Record & Recognition</h5>
+						<p>Please use below buttons to record your message.</p>
 						<div class="row" style=" margin-right:0px; margin-left:0px">
 							<div class="col-6">
 								<div class="row">
@@ -217,13 +218,15 @@
 								</div>
 							</div>
 							<br>
-							<div class="col-6">
+							<div class="col-6" style="padding: 0px;">
 								<div class="mb-3">
 									<label for="record-message-label" class="form-label">Recorded message:</label>
 									<textarea class="form-control" id="record-message-color" rows="2"></textarea>
 								</div>
 							</div>
 						</div>
+						<h5>❷ Result & Response</h5>
+						<p>OpenAI will respond based on your message.</p>
 						<div class="mb-3">
 							<label for="respond-message-label" class="form-label">Respond message:</label>
 							<textarea class="form-control" id="respond-message-color" rows="3"></textarea>
