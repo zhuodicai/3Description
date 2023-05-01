@@ -131,9 +131,10 @@ export const handpose = () => {
                 handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10- results.landmarks[0][4].y * 10));
                 handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10- results.landmarks[0][4].y * 10));
                 handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10- results.landmarks[0][4].y * 10));
-                const petalGroup = generatePetal(handShape);
-                const sepalGroup = generateSepal();
-                init(petalGroup, sepalGroup);
+                // generatePetal(handShape);
+                // petalGroup = generatePetal(handShape);
+                // const sepalGroup = generateSepal();
+                // init(petalGroup, sepalGroup);
 
                 canvasCtxShape.beginPath();
                 canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);

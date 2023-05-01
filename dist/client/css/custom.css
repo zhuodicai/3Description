@@ -34,6 +34,7 @@ h2 {
     color: #6200ee;
 }
 
+
 .nav-pills {
     display: flex;
     justify-content: center;
@@ -49,10 +50,70 @@ h2 {
     transition: background-color 0.3s;
 }
 
-.nav-button.active {
-    background-color: #ddd;
+.nav-link {
+    color: #000000;
+}
+
+.form-check-input:checked {
+    background-color: #000000;
+    border-color: #000000;
+}
+
+.nav-link:hover {
+    color: #939393;
+}
+
+#pills-shape-tab.active {
+    background-color: #000000;
+}
+
+#pills-position-tab.active {
+    background-color: #000000;
+}
+
+#pills-color-tab.active {
+    background-color: #000000;
 }
 
 .content {
     margin-top: 20px;
+}
+
+/* visibility: checkbox eye icon */
+.check-text input {
+    display: none;
+}
+
+.check-text input~span {
+    color: #333;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 2px;
+    font-weight: 200;
+}
+
+.check-text input~.checked {
+    display: none;
+}
+
+.check-text input:checked~.checked {
+    display: inline-block;
+}
+
+.check-text input:checked~.unchecked {
+    display: none;
+}
+
+.check-text input:disabled~span {
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* ... */
+.lil-gui.autoPlace {
+    position: relative;
+    right: 0px;
+}
+.lil-gui.root{
+    width: 100%;
 }

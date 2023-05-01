@@ -16,8 +16,8 @@ export const recordDef = () => {
             if (rec.state == "inactive") {
                 let blob = new Blob(audioChunks.data,{type:'audio/mpeg-3'});
                 recordedAudio.src = URL.createObjectURL(blob);
-                recordedAudio.controls = true;
-                recordedAudio.autoplay = true;
+                recordedAudio.controls = false;
+                recordedAudio.autoplay = false;
                 openaiApi.openAiTranscription(blob, audioChunks.type);
             }
         }

@@ -8,8 +8,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { setup, loop } from "./communication.js";
 import { recordDef } from "./record.js";
 import { handpose } from "./handpose.js";
+import { InitNavigation } from './navigation.js';
+import { partSelction } from './part'
 
-let camera, scene, renderer, stats;
+let camera, scene, renderer;
 const params = {
     exportToObj: exportToObj
 };
@@ -20,7 +22,12 @@ let cubeCamera, cubeRenderTarget;
 
 let controls;
 
-let container
+let container;
+
+// parts of flower group for THREE
+export let petalGroup;
+export let petalFunctionText = "";
+export let sepalGroup;
 
 function prepare() {
 
@@ -45,27 +52,22 @@ function prepare() {
 
     window.addEventListener('resize', onWindowResized);
 
-    // stats = new Stats();
-    // document.body.appendChild(stats.dom);
-
-    camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 1, 1000);
-    camera.position.z = 20;
+    camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 1, 1000);
+    camera.position.set(0, 15, 20);
+    // camera.up.set(0, 0, -1);
+    // camera.lookAt(0, 0, 0);
 
     scene = new THREE.Scene();
     scene.rotation.y = 0.5; // avoid flying objects occluding the sun
 
     new RGBELoader()
         .setPath('asset/texture/')
-        .load('quarry_01_1k.hdr', function (texture) {
-
+        .load('spaichingen_hill_1k.hdr', function (texture) {
             texture.mapping = THREE.EquirectangularReflectionMapping;
-
             scene.background = texture;
             scene.environment = texture;
-
         });
 
-    //
 
     cubeRenderTarget = new THREE.WebGLCubeRenderTarget(256);
     cubeRenderTarget.texture.type = THREE.HalfFloatType;
@@ -75,8 +77,9 @@ function prepare() {
     /* GUI */
     const gui = new GUI();
     gui.add(params, 'exportToObj').name('Export OBJ');
+    // change position of GUI
+    document.getElementById("gui").append(gui.domElement);
 
-    //
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.autoRotate = false;
@@ -96,9 +99,9 @@ export function init(petalGroup, sepalGroup) {
 
 
     /* 3. STEM */
-    const stemGeometry = new THREE.CylinderGeometry(0.2, 0.3, 10);
+    const stemGeometry = new THREE.CylinderGeometry(0.5, 0.6, 10);
     const stemMesh = new THREE.Mesh(stemGeometry, new THREE.MeshStandardMaterial({ color: "green" }));
-    stemMesh.position.y = -5;
+    stemMesh.position.y = -4;
 
     stemMesh.name = "stem";
     console.log("stemMesh:", stemMesh)
@@ -109,7 +112,7 @@ export function init(petalGroup, sepalGroup) {
     const pistilGroup = new THREE.Group();
 
     // Create the stigma
-    const stigmaGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+    const stigmaGeometry = new THREE.SphereGeometry(0.6, 16, 16);
     const stigmaMaterial = new THREE.MeshStandardMaterial({ color: "yellow" });
     const stigmaMesh = new THREE.Mesh(stigmaGeometry, stigmaMaterial);
     stigmaMesh.position.set(0, 5, 0); // move the style down to the base of the stigma
@@ -117,7 +120,7 @@ export function init(petalGroup, sepalGroup) {
     stigmaMesh.name = "stigma";
 
     // Create the style
-    const styleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 4, 8);
+    const styleGeometry = new THREE.CylinderGeometry(0.4, 0.4, 4, 8);
     const styleMaterial = new THREE.MeshStandardMaterial({ color: "green" });
     const styleMesh = new THREE.Mesh(styleGeometry, styleMaterial);
     styleMesh.position.set(0, 3, 0); // move the style down to the base of the stigma
@@ -142,14 +145,14 @@ export function init(petalGroup, sepalGroup) {
     const stamenGroup = new THREE.Group();
 
     // Create the filament
-    const filamentGeometry = new THREE.CylinderGeometry(0.1, 0.1, 4, 8);
+    const filamentGeometry = new THREE.CylinderGeometry(0.3, 0.3, 4, 8);
     filamentGeometry.translate(0, 4 / 2, 0); // 改变几何的中心点geometry.translate( 0, cylinderHeight/2, 0 );
     const filamentMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
     const filamentMesh = new THREE.Mesh(filamentGeometry, filamentMaterial);
     oneStamenGroup.add(filamentMesh);
 
     // Create the anther
-    const antherGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.6);
+    const antherGeometry = new THREE.BoxGeometry(0.6, 0.6, 0.6);
     const antherMaterial = new THREE.MeshStandardMaterial({ color: "pink" });
     const antherMesh = new THREE.Mesh(antherGeometry, antherMaterial);
     antherMesh.position.set(0, 4, 0);
@@ -291,41 +294,36 @@ function animation(msTime) {
 recordDef();
 handpose();
 
+/* 1. PETAL */
 export function generatePetal(handShape = null) {
     var shape = new THREE.Shape(); const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);
 
     // 创建一个3D mesh
     var geometry = new THREE.ExtrudeGeometry(shape, {
-        depth: 0.3,
+        depth: 0.4,
         bevelEnabled: false,
     });
 
     if (handShape) {
         geometry = new THREE.ExtrudeGeometry(handShape, {
-            depth: 0.3,
+            depth: 0.4,
             bevelEnabled: false,
         });
     }
 
     // 创建纹理
-    var petalTexture = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_BaseColor.png');
-    var petalRoughness = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Roughness.png');
-    var petalNormal = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Normal.png');
-    petalTexture.wrapS = THREE.RepeatWrapping;
-    petalTexture.wrapT = THREE.RepeatWrapping;
-    petalTexture.repeat.set(10, 10);
-    petalRoughness.wrapS = THREE.RepeatWrapping;
-    petalRoughness.wrapT = THREE.RepeatWrapping;
-    petalRoughness.repeat.set(10, 10);
+    // var petalTexture = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_BaseColor.png');
+    // var petalRoughness = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Roughness.png');
+    // var petalNormal = new THREE.TextureLoader().load('./asset/texture/fabric/Fabric_Normal.png');
+    // petalTexture.wrapS = THREE.RepeatWrapping;
+    // petalTexture.wrapT = THREE.RepeatWrapping;
+    // petalTexture.repeat.set(10, 10);
+    // petalRoughness.wrapS = THREE.RepeatWrapping;
+    // petalRoughness.wrapT = THREE.RepeatWrapping;
+    // petalRoughness.repeat.set(10, 10);
 
     // 创建材质
-    var material = new THREE.MeshStandardMaterial({
-        map: petalTexture, // 纹理贴图
-        roughnessMap: petalRoughness, // 纹理粗糙度
-        normalMap: petalNormal, // 纹理粗糙度
-        // color: "pink", // 颜色
-        side: THREE.DoubleSide,
-    });
+    var material = new THREE.MeshStandardMaterial({ color: "salmon", side: THREE.DoubleSide});
 
     // 创建花瓣mesh
     var petal = new THREE.Mesh(geometry, material);
@@ -380,7 +378,7 @@ export function generateSepal() {
     );
     // Add the curves to the shape
     sepalShape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
-    const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.5, bevelEnabled: false });
+    const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.8, bevelEnabled: false });
     const sepalMaterial = new THREE.MeshStandardMaterial({ color: "green" });
     const sepalMesh = new THREE.Mesh(sepalGeometry, sepalMaterial);
 
@@ -401,8 +399,17 @@ export function generateSepal() {
     return sepalGroup;
 }
 
-const petalGroup = generatePetal();
-const sepalGroup = generateSepal();
+export function UpdatePetalSet(newPetalGroup, newFuntionText) {
+    petalGroup = newPetalGroup;
+    petalFunctionText = newFuntionText;
+}
+
+export function UpdateSepalGroup(newSepalGroup) {
+    sepalGroup = newSepalGroup;
+}
+
+petalGroup = generatePetal();
+sepalGroup = generateSepal();
 
 prepare();
 init(petalGroup, sepalGroup);
@@ -415,3 +422,6 @@ init(petalGroup, sepalGroup);
 // run a loop every 2 seconds:
 // setInterval(loop(), 2000);
 
+//////////////////
+InitNavigation();
+partSelction();

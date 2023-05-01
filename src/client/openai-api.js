@@ -1,5 +1,5 @@
-import { generatePetal, generateSepal, init } from './client';
-import { changeSepalColor } from './color';
+import { generatePetal, init, sepalGroup, UpdatePetalSet, petalFunctionText } from './client';
+import { changePetalColor, changeSepalColor } from './color';
 import { OPENAI_API_KEY } from './OPENAI_API_KEY';
 const FormData = require("form-data");
 const axios = require("axios");
@@ -67,9 +67,32 @@ export const openAiChat = async (data, type="code") => {
             if (type === "code") {
                 document.getElementById('respond-message').innerHTML = responseChoices;
                 regexResponse(responseChoices);
+                // const shapeTitle = document.getElementById("shape-title").innerText;
+                // switch (shapeTitle) {
+                //     case "Petal Shape Adjustment":
+                //         regexResponse(responseChoices);
+                //         break;
+                //     case "Sepal Shape Adjustment":
+                //         regexResponse(responseChoices);
+                //         break;
+                //     default:
+                //         console.log(shapeTitle);
+                // }
             } else if (type === "color") {
                 document.getElementById('respond-message-color').innerHTML = responseChoices;
-                changeSepalColor(responseChoices);
+                // const pillIdentifier = document.getElementById("pills-tabContent").children[-1];
+                // console.log(pillIdentifier);
+                const colorTitle = document.getElementById("color-title").innerText;
+                switch (colorTitle) {
+                    case "Petal Color Adjustment":
+                        changePetalColor(responseChoices);
+                        break;
+                    case "Sepal Color Adjustment":
+                        changeSepalColor(responseChoices);
+                        break;
+                    default:
+                        console.log(colorTitle);
+                }
             }
         })
         .catch((error) => {
@@ -80,13 +103,16 @@ export const openAiChat = async (data, type="code") => {
 function regexResponse(response) {
     console.log(response);
 
-    let result = "var shape = new THREE.Shape();";
-    const regexMoveTo = /shape.move.*/g;
+    let result = "";
+    const regexInit = /.*new THREE.Shape\(\);/g;
+    // console.log(response.match(regexInit));
+    result += response.match(regexInit);
+    const regexMoveTo = /.*hape.move.*/g;
     result += response.match(regexMoveTo);
-    const regexLineTo = /shape.line.*/g;
+    const regexLineTo = /.*hape.line.*/g;
     const lineToResult = [...response.matchAll(regexLineTo)];
     lineToResult.forEach((ele) => {
-        console.log(ele[0]);
+        // console.log(ele[0]);
         result += ele[0];
     });
     console.log("regex result ", result);
@@ -103,20 +129,19 @@ function regexResponse(response) {
 }
 
 function changePoint(newCode) {
-    var functionText = generatePetal.toString();
-    functionText = functionText.replaceAll("three__WEBPACK_IMPORTED_MODULE_3__", "THREE");
-    functionText = functionText.replace("var shape = new THREE.Shape();"+
-    "const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2));"+
-    "const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4));"+
-    "const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2));"+
-    "const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0));"+
-    "shape.curves.push(curve1, curve2, curve3, curve4);",
-    newCode);
+    var functionText = petalFunctionText === "" ? generatePetal.toString() : petalFunctionText.toString();
+    // console.log("before change", functionText);
+    // functionText = functionText.replaceAll("three__WEBPACK_IMPORTED_MODULE_4__", "THREE");
+    functionText = functionText.replaceAll(/three__WEBPACK_IMPORTED_MODULE_[0-9]__/g, "THREE");
+    // console.log("2", functionText);
+    functionText = functionText.replace("var shape = new THREE.Shape(); const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);", newCode);
+
+    console.log("change point", functionText);
     
     functionText = new Function("handShape", functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
     
     const petalGroup = functionText("");
-    const sepalGroup = generateSepal();
+    UpdatePetalSet(petalGroup, functionText);
     init(petalGroup, sepalGroup);
 }
 

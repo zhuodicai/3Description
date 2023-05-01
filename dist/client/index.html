@@ -12,12 +12,16 @@
 	<!-- <script type="module" src="./whisper.js"></script> -->
 	<link href="./css/bootstrap.min.css" rel="stylesheet">
 	<link href="./css/custom.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
 	<link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
 	<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+	<script src="./js/navigation.js"></script>
+
 </head>
 
 <body>
@@ -27,52 +31,81 @@
 		<!-- <h1>Please describe the appearance of a flower to me!</h1> -->
 		<br>
 		<!-- 上半段 -->
-		<div class="row" style="height: 600px; background-color: rgb(200, 235, 235);">
+		<div class="row" style="height: 550px; background-color: rgb(255, 255, 255);">
 			<!-- 上左：canvas -->
 			<div class="col-8">
-				<div id="threejs-place" class="p-3 border" style="height: 100%; background-color: aqua;">
-					<!-- <p id="local" hidden="true">a</p>
-						<p id="remote">// Remote data from Arduino:</p> -->
+				<div id="threejs-place" class="p-3" style="height: 100%; background-color: rgb(255, 255, 255);">
 					<div id="canvas-threejs" style="height: 100%; "></div>
 				</div>
 			</div>
 			<!-- 上右：layers -->
 			<div class="col-4">
-				<div class="p-3 border" style="height: 100%;background-color: aqua;">
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-						<label class="form-check-label" for="flexRadioDefault1">
-							Default radio
+				<div class="p-3" style="height: 100%;background-color: rgb(255, 255, 255);">
+					<!-- <div class="row border-top border-bottom border-dark">
+						<label class="check-text" id="petal-layer">
+							<input type='checkbox' /><span class="glyphicon glyphicon-eye-open unchecked"></span><span
+								class="glyphicon glyphicon-eye-close checked"></span>
+							|&nbsp &nbsp Layer1: PETAL
+						</label>
+					</div> -->
+					<div class="row border-top border-bottom border-dark form-check pt-4 pb-3">
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-petal"
+							value="option1" checked>
+						<label class="form-check-label" for="exampleRadios1">
+							&nbsp|&nbsp &nbsp Part1: &nbsp PETAL
 						</label>
 					</div>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
-							checked>
-						<label class="form-check-label" for="flexRadioDefault2">
-							Default checked radio
+					<div class="row border-bottom border-dark form-check pt-4 pb-3">
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-sepal"
+							value="option2">
+						<label class="form-check-label" for="exampleRadios2">
+							&nbsp|&nbsp &nbsp Part2: &nbsp SEPAL
 						</label>
 					</div>
+					<div class="row border-bottom border-dark form-check pt-4 pb-3">
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-stem"
+							value="option3" disabled>
+						<label class="form-check-label" for="exampleRadios3">
+							&nbsp|&nbsp &nbsp Part3: &nbsp STEM
+						</label>
+					</div>
+					<div class="row border-bottom border-dark form-check pt-4 pb-3">
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-pistil"
+							value="option4" disabled>
+						<label class="form-check-label" for="exampleRadios4">
+							&nbsp|&nbsp &nbsp Part4: &nbsp PISTIL
+						</label>
+					</div>
+					<div class="row border-bottom border-dark form-check pt-4 pb-3">
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-stamen"
+							value="option5" disabled>
+						<label class="form-check-label" for="exampleRadios5">
+							&nbsp|&nbsp &nbsp Part5: &nbsp STAMEN
+						</label>
+					</div>
+					<div id="gui" class="row pt-4"></div>
 				</div>
 			</div>
 		</div>
 		<!-- 下半段 -->
-		<div class="row" style="height: 100px; background-color: rgb(230, 200, 235);">
-			<div class="col-12">
-				<div class="d-flex justify-content-left" style="background-color: rgb(255, 0, 221);">
+		<div class="row" style="background-color: rgb(255, 255, 255);">
+			<div class="col-12" style="padding-bottom: 1px;">
+				<div class="px-3 pt-3 d-flex justify-content-left border-top border-bottom border-dark"
+					style="background-color: rgb(255, 255, 255);">
 					<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
-								data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+							<button class="nav-link active" id="pills-shape-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-shape" type="button" role="tab" aria-controls="pills-shape"
 								aria-selected="true">Shape</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-								data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
+							<button class="nav-link" id="pills-position-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-position" type="button" role="tab" aria-controls="pills-position"
 								aria-selected="false">Position</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-								data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact"
+							<button class="nav-link" id="pills-color-tab" data-bs-toggle="pill"
+								data-bs-target="#pills-color" type="button" role="tab" aria-controls="pills-color"
 								aria-selected="false">Color</button>
 						</li>
 					</ul>
@@ -80,125 +113,127 @@
 			</div>
 
 			<div class="col-12">
-				<div class="tab-content" id="pills-tabContent" style="background-color: rgb(255, 0, 221);">
-					<div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-						aria-labelledby="pills-home-tab" tabindex="0">Shape content</div>
-					<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
-						tabindex="0">Position content</div>
-					<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab"
-						tabindex="0">Color content</div>
+				<div class="tab-content" id="pills-tabContent" style="background-color: rgb(255, 255, 255);">
+					<div class="tab-pane active p-3" id="pills-shape" role="tabpanel" aria-labelledby="pills-shape-tab"
+						tabindex="0">
+						<h3 id="shape-title">Petal Shape Adjustment</h3>
+						<h4>> Verbal Description</h4>
+						<h5>❶ Record & Recognition</h5>
+						<p>Please use below buttons to record your message.</p>
+						<div class="row" style=" margin-right:0px; margin-left:0px">
+							<div class="col-6">
+								<div class="row">
+									<div class="col">
+										<button type="button" id="record" enabled class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">RECORD</span>
+										</button>
+										<button type="button" id="stopRecord" disabled
+											class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">STOP</span>
+										</button>
+									</div>
+									<div class="col">
+										<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
+									</div>
+								</div>
+							</div>
+							<br>
+							<div class="col-6" style="padding: 0px;">
+								<div class="mb-3">
+									<label for="record-message-label" class="form-label">Recorded message:</label>
+									<textarea class="form-control" id="record-message" rows="2"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<h5>❷ Result & Response</h5>
+						<p>OpenAI will respond based on your message.</p>
+						<div class="mb-3">
+							<label for="respond-message-label" class="form-label">Respond message:</label>
+							<textarea class="form-control" id="respond-message" rows="3"></textarea>
+						</div>
+						<h4>> Gesture Description</h4>
+						<h5>❶ Describe Shape with Hands </h5>
+						<p>Describe the shape with both of your hands.</p>
+						<div class="row" style=" margin-right:0px; margin-left:0px">
+							<div id="liveView" class="videoView" style="padding:0px;">
+								<button id="webcamButton" class="mb-3 mdc-button mdc-button--raised">
+									<span class="mdc-button__ripple"></span>
+									<span class="mdc-button__label">ENABLE WEBCAM</span>
+								</button>
+								<div class="row">
+									<div class="col-6">
+										<video id="webcam" style="position: absolute" autoplay playsinline></video>
+										<canvas id="output_canvas" class="output_canvas"
+											style="position: relative; right: 0px;"></canvas>
+									</div>
+
+									<div class="col-6">
+										<canvas id="shape_canvas" class="shape_canvas"
+											style="height: 360px; width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="pills-position" role="tabpanel" aria-labelledby="pills-position-tab"
+						tabindex="0">
+						<h4>> Gesture Description</h4>
+						<h5>❶ Angle Constraint: Openness Adjustment </h5>
+						<p>Describe the angle with your right hand or both of your hands.</p>
+						<!-- <p>Attach the Arduino on the index finger, then describe the openness with fingers or hands. Now
+							only available for the petal.</p> -->
+						<!-- <div class="threejs-place">
+							<p id="local" hidden="true">a</p>
+							<p id="remote">// Remote data from Arduino:</p>
+						</div>
+						<div id="canvas-threejs"></div> -->
+					</div>
+					<div class="tab-pane fade" id="pills-color" role="tabpanel" aria-labelledby="pills-color-tab"
+						tabindex="0">
+						<h3 id="color-title">Petal Color Adjustment</h3>
+						<h4>> Verbal Description</h4>
+						<p>Please use below buttons to record the color you want to set for sepals</p>
+						<div class="row" style=" margin-right:0px; margin-left:0px">
+							<div class="col-6">
+								<div class="row">
+									<div class="col">
+										<button type="button" id="recordColor" enabled
+											class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">RECORD</span>
+										</button>
+										<button type="button" id="stopRecordColor" disabled
+											class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">STOP</span>
+										</button>
+									</div>
+									<div class="col">
+										<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
+									</div>
+								</div>
+							</div>
+							<br>
+							<div class="col-6">
+								<div class="mb-3">
+									<label for="record-message-label" class="form-label">Recorded message:</label>
+									<textarea class="form-control" id="record-message-color" rows="2"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="mb-3">
+							<label for="respond-message-label" class="form-label">Respond message:</label>
+							<textarea class="form-control" id="respond-message-color" rows="3"></textarea>
+						</div>
+					</div>
 				</div>
 			</div>
 
 		</div>
 
-
-
-
-		<h2>🗣️ Verbal Description</h2>
-		<h3>❶ Record & Recognition</h3>
-		<div class="row">
-			<div class="col-6">
-				<p>Please use below buttons to record your message.</p>
-				<div class="row">
-					<div class="col">
-						<button type="button" id="record" enabled class="mdc-button mdc-button--raised">
-							<span class="mdc-button__ripple"></span>
-							<span class="mdc-button__label">RECORD</span>
-						</button>
-						<button type="button" id="stopRecord" disabled class="mdc-button mdc-button--raised">
-							<span class="mdc-button__ripple"></span>
-							<span class="mdc-button__label">STOP</span>
-						</button>
-					</div>
-					<div class="col">
-						<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
-					</div>
-				</div>
-			</div>
-			<br>
-			<div class="col-6">
-				<div class="mb-3">
-					<label for="record-message-label" class="form-label">Recorded message:</label>
-					<textarea class="form-control" id="record-message" rows="2"></textarea>
-				</div>
-			</div>
-		</div>
-
-		<h3>❷ Result & Response</h3>
-		<p>OpenAI will respond based on your message.</p>
-		<div class="mb-3">
-			<label for="respond-message-label" class="form-label">Respond message:</label>
-			<textarea class="form-control" id="respond-message" rows="3"></textarea>
-		</div>
-
-		<h3>❸ Change Sepal Color</h3>
-		<div class="row">
-			<div class="col-6">
-				<p>Please use below buttons to record the color you want to set for sepals</p>
-				<div class="row">
-					<div class="col">
-						<button type="button" id="recordColor" enabled class="mdc-button mdc-button--raised">
-							<span class="mdc-button__ripple"></span>
-							<span class="mdc-button__label">RECORD</span>
-						</button>
-						<button type="button" id="stopRecordColor" disabled class="mdc-button mdc-button--raised">
-							<span class="mdc-button__ripple"></span>
-							<span class="mdc-button__label">STOP</span>
-						</button>
-					</div>
-					<div class="col">
-						<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
-					</div>
-				</div>
-			</div>
-			<br>
-			<div class="col-6">
-				<div class="mb-3">
-					<label for="record-message-label" class="form-label">Recorded message:</label>
-					<textarea class="form-control" id="record-message-color" rows="2"></textarea>
-				</div>
-			</div>
-		</div>
-		<div class="mb-3">
-			<label for="respond-message-label" class="form-label">Respond message:</label>
-			<textarea class="form-control" id="respond-message-color" rows="3"></textarea>
-		</div>
-
-		<h2>✋ Gesture Description</h2>
-		<h3>❶ Describe Shape with Hands </h3>
-		<p>Describe the shape with both of your hands. Now only available for the petal.</p>
-		<div class="row">
-
-			<div id="liveView" class="videoView">
-				<button id="webcamButton" class="mb-3 mdc-button mdc-button--raised">
-					<span class="mdc-button__ripple"></span>
-					<span class="mdc-button__label">ENABLE WEBCAM</span>
-				</button>
-				<div class="row">
-					<div class="col-6">
-						<video id="webcam" style="position: absolute" autoplay playsinline></video>
-						<canvas id="output_canvas" class="output_canvas"
-							style="position: relative; right: 0px;"></canvas>
-					</div>
-
-					<div class="col-6">
-						<canvas id="shape_canvas" class="shape_canvas" style="height: 360px; width: 100%;"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<h3>❷ Openness Adjustment via Arduino</h3>
-		<p>Attach the Arduino on the index finger, then describe the openness with fingers or hands. Now only
-			available
-			for
-			the petal.</p>
-		<!-- <div class="threejs-place">
-			<p id="local" hidden="true">a</p>
-			<p id="remote">// Remote data from Arduino:</p>
-		</div>
-		<div id="canvas-threejs"></div> -->
 	</div>
 
 </body>
