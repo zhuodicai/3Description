@@ -11,7 +11,8 @@ import { handpose } from "./handpose.js";
 import { InitNavigation } from './navigation.js';
 import { partSelction } from './part'
 
-let camera, renderer;
+let camera;
+export let renderer;
 export let scene;
 
 const params = {
@@ -38,7 +39,7 @@ function prepare() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setAnimationLoop(animation);
+    renderer.setAnimationLoop(() => animation(0.6));
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     const canvas = renderer.domElement;
@@ -62,7 +63,7 @@ function prepare() {
 
     scene = new THREE.Scene();
     scene.rotation.y = 0.5; // avoid flying objects occluding the sun
-
+    
     new RGBELoader()
         .setPath('asset/texture/')
         .load('spaichingen_hill_1k.hdr', function (texture) {
@@ -226,9 +227,7 @@ function onWindowResized() {
 
 }
 
-function animation(msTime) {
-
-    const time = msTime / 1000;
+export function animation(rotx) {
 
     cubeCamera.update(renderer, scene);
 
@@ -237,7 +236,7 @@ function animation(msTime) {
     renderer.render(scene, camera);
     // let rotx = parseFloat(document.getElementById("remote").innerHTML);
     // let rotx = Math.min(Math.max(rotx, 0), 1);
-    let rotx = 0.6; //0~1
+    // let rotx = 0.6; //0~1
 
     if (!isNaN(rotx)) {
         for (const group of scene.children) {

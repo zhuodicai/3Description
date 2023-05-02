@@ -1,6 +1,15 @@
-import { scene } from "./client";
+import { scene, renderer, animation } from "./client";
 
-export const updatePetalPosition = (rotx) => {
+
+export const regexPosisionResponse = (response) => {
+    const position = response.match(/[0-9]+\.[0-9]+/g);
+    console.log(position);
+    // updatePetalPosition(Number(position));
+    renderer.setAnimationLoop(() => animation(Number(position)));
+}
+
+export const updatePosition = (rotx) => {
+    console.log(typeof(rotx));
     // petal position
     for (const group of scene.children) {
         if (group.name != "petals") continue;
@@ -28,6 +37,30 @@ export const updatePetalPosition = (rotx) => {
                 sepal.rotateX(Math.PI * (1 - rotx) / 4); // 控制花瓣开合程度，2花苞，20基本完全开放.对应accelerometer z=0垂直于地面，z=1平行于地面
                 sepal.position.y = 0;
                 sepal.scale.set(0.75 + rotx / 4, 0.75 + rotx / 4, 0.75 + rotx / 4);
+                i++;
+            }
+        }
+    }
+    // pistil
+    for (const group of scene.children) {
+        if (group.name != "pistil") continue;
+        if (group.name == "pistil") {
+            // console.log(group);
+            group.scale.set(0.5 + rotx / 2, 0.5 + rotx / 2, 0.5 + rotx / 2); //0->0.5, 1->1
+        }
+    }
+    // stamens
+    const stamenCount = 12;
+    for (const group of scene.children) {
+        if (group.name != "stamens") continue;
+        if (group.name == "stamens") {
+            let i = 0;
+            for (const stamen of group.children) {
+                stamen.rotation.set(-Math.PI / 4, 0, 0);
+                stamen.rotateZ((Math.PI * 2 / stamenCount * i));
+                stamen.rotateX(Math.PI * (1.2 - rotx) / 2);
+                stamen.position.y = 0;
+                stamen.scale.set(0.8 + rotx / 5, 0.8 + rotx / 5, 0.8 + rotx / 5);
                 i++;
             }
         }

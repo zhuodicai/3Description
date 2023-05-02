@@ -1,6 +1,7 @@
 import { generatePetal, init, sepalGroup, UpdatePetalGroup, petalFunctionText } from './client';
 import { changePetalColor, changeSepalColor } from './color';
 import { OPENAI_API_KEY } from './OPENAI_API_KEY';
+import { regexPosisionResponse } from './position';
 const FormData = require("form-data");
 const axios = require("axios");
 
@@ -33,6 +34,10 @@ export const openAiTranscription = async (data, type) => {
                 document.getElementById("record-message-color").innerHTML = speechResult;
                 let prompt = "0.provide me the html css color based on the description. 1." + speechResult;
                 openAiChat(prompt + speechResult, "color");
+            } else if (type === "position") {
+                document.getElementById("record-message-position").innerHTML = speechResult;
+                let prompt = "tell a number in 0 to 1 as decimal based on my description: " + speechResult;
+                openAiChat(prompt + speechResult, "position");
             }
            
         })
@@ -93,7 +98,10 @@ export const openAiChat = async (data, type="code") => {
                         break;
                     default:
                         console.log(colorTitle);
-                }
+                } 
+            } else if (type === "position") {
+                document.getElementById('respond-message-position').innerHTML = responseChoices;
+                regexPosisionResponse(responseChoices);
             }
         })
         .catch((error) => {

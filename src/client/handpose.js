@@ -1,7 +1,7 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
 
 import { generatePetal, init, sepalGroup, UpdatePetalGroup } from "./client";
-import { updatePetalPosition } from "./position.js";
+import { updatePosition } from "./position.js";
 
 const { HandLandmarker, FilesetResolver } = vision;
 
@@ -189,11 +189,11 @@ export const handpose = () => {
                     let lineMirrorAngle = Math.atan2((results.landmarks[0][5].y - results.landmarks[0][8].y), results.landmarks[0][5].x - results.landmarks[0][8].x);
                     if (lineAngle > 0) {
                         console.log("小于平角", Math.abs((lineAngle - lineMirrorAngle) * 180 / Math.PI));
-                        updatePetalPosition(Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
+                        updatePosition(Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
                     }
                     else {
                         console.log("大于平角", 360 - Math.abs((lineAngle - lineMirrorAngle) * 180 / Math.PI));
-                        updatePetalPosition(2 - Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
+                        updatePosition(2 - Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
                     }
 
                 } else if (results.landmarks.length == 2) {

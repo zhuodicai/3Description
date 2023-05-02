@@ -55,4 +55,20 @@ export const recordDef = () => {
         rec.stop();
     }
 
+    recordPosition.onclick = e => {
+        recordPosition.disabled = true;
+        stopRecordPosition.disabled = false;
+        audioChunks = {
+            data: [],
+            type: "position"
+        };
+        rec.start();
+    }
+
+    stopRecordPosition.onclick = e => {
+        recordPosition.disabled = false;
+        stopRecordPosition.disabled = true;
+        rec.stop();
+    }
+
 }
