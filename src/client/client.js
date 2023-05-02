@@ -350,39 +350,11 @@ export function generateSepal() {
     const sepalGroup = new THREE.Group();
 
     // Create the sepal
-    const sepalShape = new THREE.Shape();
+    const shape = new THREE.Shape();
     // Define the curves
-    const sepalCurve1 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(-0.2, 1),
-        new THREE.Vector2(-1, 2),
-        new THREE.Vector2(-1.2, 4)
-    );
+    const sepalCurve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0),new THREE.Vector2(-0.2, 1),new THREE.Vector2(-1, 2),new THREE.Vector2(-1.2, 4));const sepalCurve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1.2, 4),new THREE.Vector2(-1, 5),new THREE.Vector2(0, 6),new THREE.Vector2(0.8, 5));const sepalCurve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0.8, 5),new THREE.Vector2(1, 4),new THREE.Vector2(0.5, 2),new THREE.Vector2(0, 0));const sepalCurve4 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0),new THREE.Vector2(0.2, -1),new THREE.Vector2(1, -2),new THREE.Vector2(1.2, -4));shape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
 
-    const sepalCurve2 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(-1.2, 4),
-        new THREE.Vector2(-1, 5),
-        new THREE.Vector2(0, 6),
-        new THREE.Vector2(0.8, 5)
-    );
-
-    const sepalCurve3 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0.8, 5),
-        new THREE.Vector2(1, 4),
-        new THREE.Vector2(0.5, 2),
-        new THREE.Vector2(0, 0)
-    );
-
-    const sepalCurve4 = new THREE.CubicBezierCurve(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(0.2, -1),
-        new THREE.Vector2(1, -2),
-        new THREE.Vector2(1.2, -4)
-    );
-    // Add the curves to the shape
-    sepalShape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);
-
-    const sepalGeometry = new THREE.ExtrudeGeometry(sepalShape, { depth: 0.8, bevelEnabled: false });
+    const sepalGeometry = new THREE.ExtrudeGeometry(shape, { depth: 0.8, bevelEnabled: false });
     const sepalMaterial = new THREE.MeshStandardMaterial({ color: "green" });
     const sepalMesh = new THREE.Mesh(sepalGeometry, sepalMaterial);
 

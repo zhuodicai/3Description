@@ -1,4 +1,4 @@
-import { generatePetal, init, sepalGroup, UpdatePetalGroup, petalFunctionText } from './client';
+import { generatePetal, init, sepalGroup, UpdatePetalGroup, petalFunctionText, sepalFunctionText, generateSepal, UpdateSepalGroup, petalGroup } from './client';
 import { changePetalColor, changeSepalColor } from './color';
 import { OPENAI_API_KEY } from './OPENAI_API_KEY';
 import { regexPosisionResponse } from './position';
@@ -73,17 +73,17 @@ export const openAiChat = async (data, type="code") => {
             if (type === "code") {
                 document.getElementById('respond-message').innerHTML = responseChoices;
                 regexResponse(responseChoices);
-                // const shapeTitle = document.getElementById("shape-title").innerText;
-                // switch (shapeTitle) {
-                //     case "Petal Shape Adjustment":
-                //         regexResponse(responseChoices);
-                //         break;
-                //     case "Sepal Shape Adjustment":
-                //         regexResponse(responseChoices);
-                //         break;
-                //     default:
-                //         console.log(shapeTitle);
-                // }
+                const shapeTitle = document.getElementById("shape-title").innerText;
+                switch (shapeTitle) {
+                    case "Petal Shape Adjustment":
+                        regexResponse(responseChoices, shapeTitle);
+                        break;
+                    case "Sepal Shape Adjustment":
+                        regexResponse(responseChoices, shapeTitle);
+                        break;
+                    default:
+                        console.log(shapeTitle);
+                }
             } else if (type === "color") {
                 document.getElementById('respond-message-color').innerHTML = responseChoices;
                 // const pillIdentifier = document.getElementById("pills-tabContent").children[-1];
@@ -109,7 +109,7 @@ export const openAiChat = async (data, type="code") => {
         });
 }
 
-function regexResponse(response) {
+function regexResponse(response, shapeTitle) {
     console.log(response);
 
     let result = "";
@@ -134,7 +134,17 @@ function regexResponse(response) {
     // "shape.lineTo(-4, 2);"+
     // "shape.lineTo(-2, 3);"+
     // "shape.lineTo(0, 0);"
-    changePoint(result);
+    
+    switch (shapeTitle) {
+        case "Petal Shape Adjustment":
+            changePoint(result);
+            break;
+        case "Sepal Shape Adjustment":
+            changeSepalPoint(result);
+            break;
+        default:
+            console.log(shapeTitle);
+    }
 }
 
 function changePoint(newCode) {
@@ -161,3 +171,24 @@ function changePoint(newCode) {
     init(petalGroup, sepalGroup);
 }
 
+function changeSepalPoint(newCode) {
+    var functionText = sepalFunctionText === "" ? generateSepal.toString() : sepalFunctionText.toString();
+    functionText = functionText.replaceAll(/three__WEBPACK_IMPORTED_MODULE_[0-9]__/g, "THREE");
+    // Remove old code but has been updated already.
+    functionText = functionText.replaceAll(/.*moveTo.*;/g, "");
+    functionText = functionText.replaceAll(/.*lineTo.*;/g, "");
+    // Remove original code
+    functionText = functionText.replace("const sepalCurve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0),new THREE.Vector2(-0.2, 1),new THREE.Vector2(-1, 2),new THREE.Vector2(-1.2, 4));const sepalCurve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1.2, 4),new THREE.Vector2(-1, 5),new THREE.Vector2(0, 6),new THREE.Vector2(0.8, 5));const sepalCurve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0.8, 5),new THREE.Vector2(1, 4),new THREE.Vector2(0.5, 2),new THREE.Vector2(0, 0));const sepalCurve4 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0),new THREE.Vector2(0.2, -1),new THREE.Vector2(1, -2),new THREE.Vector2(1.2, -4));shape.curves.push(sepalCurve1, sepalCurve2, sepalCurve3, sepalCurve4);", "");
+    // Add new code, using THREE.Shape() as place identifier
+    functionText = functionText.replace(/.*THREE.Shape.*;/g, newCode);
+    // Name all pentalShape to shape
+    functionText = functionText.replace(/[a-z]*[A-Z]*[Ss]hape\./g, "shape.");
+    functionText = functionText.replace(/[a-z]*[A-Z]*[Ss]hape /g, "shape ");
+    console.log("change sepal point", functionText);
+
+    functionText = new Function(functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
+    const sepalGroup = functionText();
+
+    UpdateSepalGroup(sepalGroup, functionText);
+    init(petalGroup, sepalGroup);
+}
