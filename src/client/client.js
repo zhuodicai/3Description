@@ -11,7 +11,9 @@ import { handpose } from "./handpose.js";
 import { InitNavigation } from './navigation.js';
 import { partSelction } from './part'
 
-let camera, scene, renderer;
+let camera, renderer;
+export let scene;
+
 const params = {
     exportToObj: exportToObj
 };
@@ -235,7 +237,7 @@ function animation(msTime) {
     renderer.render(scene, camera);
     // let rotx = parseFloat(document.getElementById("remote").innerHTML);
     // let rotx = Math.min(Math.max(rotx, 0), 1);
-    let rotx = 0.6;
+    let rotx = 0.6; //0~1
 
     if (!isNaN(rotx)) {
         for (const group of scene.children) {
@@ -297,7 +299,7 @@ handpose();
 
 /* 1. PETAL */
 export function generatePetal(handShape = null) {
-    var shape = new THREE.Shape(); 
+    var shape = new THREE.Shape();
     const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);
 
     // 创建一个3D mesh

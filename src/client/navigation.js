@@ -1,3 +1,5 @@
+import { handpose } from "./handpose";
+
 export const InitNavigation = () => {
     ShapeNavigation();
     PositionNavigation();
@@ -15,6 +17,7 @@ const ShapeClicked = () => {
     removeAllContent();
     document.getElementById("pills-shape-tab").classList.add("active");  
     document.getElementById("pills-shape").className = "tab-pane active p-3";
+    handpose();
 }
 
 const PositionNavigation = () => {
@@ -26,6 +29,7 @@ const PositionClicked = () => {
     removeAllContent();
     document.getElementById("pills-position-tab").classList.add("active");  
     document.getElementById("pills-position").className = "tab-pane active p-3";
+    handpose();
 }
 
 const ColorNavigation = () => {

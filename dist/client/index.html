@@ -188,11 +188,11 @@
 							<div class="col-6">
 								<div class="row">
 									<div class="col">
-										<button type="button" id="record" enabled class="mdc-button mdc-button--raised">
+										<button type="button" id="recordPosition" enabled class="mdc-button mdc-button--raised">
 											<span class="mdc-button__ripple"></span>
 											<span class="mdc-button__label">RECORD</span>
 										</button>
-										<button type="button" id="stopRecord" disabled
+										<button type="button" id="stopRecordPosition" disabled
 											class="mdc-button mdc-button--raised">
 											<span class="mdc-button__ripple"></span>
 											<span class="mdc-button__label">STOP</span>
@@ -229,20 +229,20 @@
 						</div>
 						<div id="canvas-threejs"></div> -->
 						<div class="row" style=" margin-right:0px; margin-left:0px">
-							<div id="liveView" class="videoView" style="padding:0px;">
-								<button id="webcamButton" class="mb-3 mdc-button mdc-button--raised">
+							<div id="liveViewPosition" class="videoView" style="padding:0px;">
+								<button id="webcamButtonPosition" class="mb-3 mdc-button mdc-button--raised">
 									<span class="mdc-button__ripple"></span>
 									<span class="mdc-button__label">ENABLE WEBCAM</span>
 								</button>
 								<div class="row" style="padding: 7.5px;">
 									<div class="col-6">
-										<video id="webcam" style="position: absolute" autoplay playsinline></video>
-										<canvas id="output_canvas" class="output_canvas"
+										<video id="webcamPosition" style="position: absolute" autoplay playsinline></video>
+										<canvas id="output_canvas_position" class="output_canvas"
 											style="position: relative; right: 0px;"></canvas>
 									</div>
 
 									<div class="col-6">
-										<canvas id="shape_canvas" class="shape_canvas"
+										<canvas id="shape_canvas_position" class="shape_canvas"
 											style="height: 360px; width: 100%;"></canvas>
 									</div>
 								</div>

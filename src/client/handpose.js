@@ -1,6 +1,7 @@
 import vision from "../../node_modules/@mediapipe/tasks-vision/vision_bundle.js";
 
 import { generatePetal, init, sepalGroup, UpdatePetalGroup } from "./client";
+import { updatePetalPosition } from "./position.js";
 
 const { HandLandmarker, FilesetResolver } = vision;
 
@@ -36,11 +37,11 @@ export const handpose = () => {
     // Continuously grab image from webcam stream and detect it.
     ********************************************************************/
 
-    const video = document.getElementById("webcam");
-    const canvasElement = document.getElementById("output_canvas");
-    const canvasCtx = canvasElement.getContext("2d");
-    const canvasElementShape = document.getElementById("shape_canvas");
-    const canvasCtxShape = canvasElementShape.getContext("2d");
+    var video = document.getElementById("webcam");
+    var canvasElement = document.getElementById("output_canvas");
+    var canvasCtx = canvasElement.getContext("2d");
+    var canvasElementShape = document.getElementById("shape_canvas");
+    var canvasCtxShape = canvasElementShape.getContext("2d");
 
     // Check if webcam access is supported.
     function hasGetUserMedia() {
@@ -50,8 +51,25 @@ export const handpose = () => {
     // If webcam supported, add event listener to button for when user
     // wants to activate it.
     if (hasGetUserMedia()) {
-        enableWebcamButton = document.getElementById("webcamButton");
-        enableWebcamButton.addEventListener("click", enableCam);
+        console.log(document.getElementById("pills-shape-tab").classList.toString());
+        if (document.getElementById("pills-shape-tab").classList.toString().includes("active")) {
+            enableWebcamButton = document.getElementById("webcamButton");
+            enableWebcamButton.addEventListener("click", enableCam);
+            video = document.getElementById("webcam");
+            canvasElement = document.getElementById("output_canvas");
+            canvasCtx = canvasElement.getContext("2d");
+            canvasElementShape = document.getElementById("shape_canvas");
+            canvasCtxShape = canvasElementShape.getContext("2d");
+        } else if (document.getElementById("pills-position-tab").classList.toString().includes("active")) {
+            // console.log("if it is called");
+            enableWebcamButton = document.getElementById("webcamButtonPosition");
+            enableWebcamButton.addEventListener("click", enableCam);
+            video = document.getElementById("webcamPosition");
+            canvasElement = document.getElementById("output_canvas_position");
+            canvasCtx = canvasElement.getContext("2d");
+            canvasElementShape = document.getElementById("shape_canvas_position");
+            canvasCtxShape = canvasElementShape.getContext("2d");
+        }
     } else {
         console.warn("getUserMedia() is not supported by your browser");
     }
@@ -100,62 +118,91 @@ export const handpose = () => {
 
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
         if (results.landmarks) {
             for (const landmarks of results.landmarks) {
                 drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
                     color: "#ffffff",
                     lineWidth: 2
                 });
-                drawLandmarks(canvasCtx, landmarks, { color: "#6200ee", lineWidth: 1 });
+                // drawLandmarks(canvasCtx, landmarks, { color: "#6200ee", lineWidth: 1 });
             }
         }
         canvasCtx.restore();
-
         canvasCtxShape.save();
         canvasCtxShape.fillStyle = "blue";
         canvasCtxShape.clearRect(0, 0, canvasElementShape.width, canvasElementShape.height);
-        // console.log("now the cam belongs to:",document.getElementById("pills-position-tab"));
-        if (results.landmarks) {
-            if (results.landmarks.length == 2) {
-                const handShape = new THREE.Shape();
-                console.log(results.landmarks)
-                handShape.moveTo(0, 0);
-                handShape.lineTo(results.landmarks[0][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][3].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][2].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][5].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][6].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][7].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[0][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][8].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][8].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][7].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][6].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][5].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10 - results.landmarks[0][4].y * 10));
-                handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10 - results.landmarks[0][4].y * 10));
-                const petalGroup = generatePetal(handShape);
-                UpdatePetalGroup(petalGroup);
-                init(petalGroup, sepalGroup);
 
-                canvasCtxShape.beginPath();
-                canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][3].x * canvasElement.width, results.landmarks[0][3].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][2].x * canvasElement.width, results.landmarks[0][2].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][5].x * canvasElement.width, results.landmarks[0][5].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][6].x * canvasElement.width, results.landmarks[0][6].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][7].x * canvasElement.width, results.landmarks[0][7].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[0][8].x * canvasElement.width, results.landmarks[0][8].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][8].x * canvasElement.width, results.landmarks[1][8].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][7].x * canvasElement.width, results.landmarks[1][7].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][6].x * canvasElement.width, results.landmarks[1][6].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][5].x * canvasElement.width, results.landmarks[1][5].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][2].x * canvasElement.width, results.landmarks[1][2].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][3].x * canvasElement.width, results.landmarks[1][3].y * canvasElement.height);
-                canvasCtxShape.lineTo(results.landmarks[1][4].x * canvasElement.width, results.landmarks[1][4].y * canvasElement.height);
-                canvasCtxShape.closePath();
-                canvasCtxShape.stroke();
-                canvasCtxShape.fillStyle = "#f4511e";
-                canvasCtxShape.fill();
+        if (results.landmarks) {
+            if (document.getElementById("pills-shape-tab").classList.toString().includes("active")) {
+                if (results.landmarks.length == 2) {
+                    const handShape = new THREE.Shape();
+                    // console.log(results.landmarks);
+                    handShape.moveTo(0, 0);
+                    handShape.lineTo(results.landmarks[0][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][3].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[0][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][2].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[0][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][5].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[0][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][6].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[0][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][7].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[0][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[0][8].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][8].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][8].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][7].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][7].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][6].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][6].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][5].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][5].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][2].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][2].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][3].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][3].y * 10 - results.landmarks[0][4].y * 10));
+                    handShape.lineTo(results.landmarks[1][4].x * 10 - results.landmarks[0][4].x * 10, - (results.landmarks[1][4].y * 10 - results.landmarks[0][4].y * 10));
+
+                    const petalGroup = generatePetal(handShape);
+                    UpdatePetalGroup(petalGroup);
+                    init(petalGroup, sepalGroup);
+
+                    canvasCtxShape.beginPath();
+                    canvasCtxShape.moveTo(results.landmarks[0][4].x * canvasElement.width, results.landmarks[0][4].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][3].x * canvasElement.width, results.landmarks[0][3].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][2].x * canvasElement.width, results.landmarks[0][2].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][5].x * canvasElement.width, results.landmarks[0][5].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][6].x * canvasElement.width, results.landmarks[0][6].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][7].x * canvasElement.width, results.landmarks[0][7].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][8].x * canvasElement.width, results.landmarks[0][8].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][8].x * canvasElement.width, results.landmarks[1][8].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][7].x * canvasElement.width, results.landmarks[1][7].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][6].x * canvasElement.width, results.landmarks[1][6].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][5].x * canvasElement.width, results.landmarks[1][5].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][2].x * canvasElement.width, results.landmarks[1][2].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][3].x * canvasElement.width, results.landmarks[1][3].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[1][4].x * canvasElement.width, results.landmarks[1][4].y * canvasElement.height);
+                    canvasCtxShape.closePath();
+                    canvasCtxShape.stroke();
+                    canvasCtxShape.fillStyle = "#f4511e";
+                    canvasCtxShape.fill();
+                }
+            } else if (document.getElementById("pills-position-tab").classList.toString().includes("active")) {
+                if (results.landmarks.length == 1) {
+                    canvasCtxShape.beginPath(); // Start a new path
+                    canvasCtxShape.moveTo(results.landmarks[0][8].x * canvasElement.width, results.landmarks[0][8].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][5].x * canvasElement.width, results.landmarks[0][5].y * canvasElement.height);
+                    canvasCtxShape.lineTo((results.landmarks[0][5].x + (results.landmarks[0][5].x - results.landmarks[0][8].x)) * canvasElement.width, (results.landmarks[0][5].y - (results.landmarks[0][5].y - results.landmarks[0][8].y)) * canvasElement.height);
+                    canvasCtxShape.strokeStyle = "black";
+                    canvasCtxShape.stroke();
+                    let lineAngle = Math.atan2((results.landmarks[0][5].y - (results.landmarks[0][5].y - (results.landmarks[0][5].y - results.landmarks[0][8].y))), results.landmarks[0][5].x - (results.landmarks[0][5].x + (results.landmarks[0][5].x - results.landmarks[0][8].x)));
+                    let lineMirrorAngle = Math.atan2((results.landmarks[0][5].y - results.landmarks[0][8].y), results.landmarks[0][5].x - results.landmarks[0][8].x);
+                    if (lineAngle > 0) {
+                        console.log("小于平角", Math.abs((lineAngle - lineMirrorAngle) * 180 / Math.PI));
+                        updatePetalPosition(Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
+                    }
+                    else {
+                        console.log("大于平角", 360 - Math.abs((lineAngle - lineMirrorAngle) * 180 / Math.PI));
+                        updatePetalPosition(2 - Math.abs((lineAngle - lineMirrorAngle) / Math.PI));
+                    }
+
+                } else if (results.landmarks.length == 2) {
+                    canvasCtxShape.beginPath();
+                    canvasCtxShape.moveTo(results.landmarks[0][8].x * canvasElement.width, results.landmarks[0][8].y * canvasElement.height);
+                    canvasCtxShape.lineTo(results.landmarks[0][5].x * canvasElement.width, results.landmarks[0][5].y * canvasElement.height);
+                    canvasCtxShape.lineTo((results.landmarks[0][5].x + (results.landmarks[0][5].x - results.landmarks[0][8].x)) * canvasElement.width, (results.landmarks[0][5].y - (results.landmarks[0][5].y - results.landmarks[0][8].y)) * canvasElement.height);
+                    canvasCtxShape.stroke();
+                }
             }
         }
         // canvasCtxShape.restore();
