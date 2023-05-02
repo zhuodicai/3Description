@@ -107,14 +107,14 @@ function regexResponse(response) {
     let result = "";
     const regexInit = /.*new THREE.Shape\(\);/g;
     // console.log(response.match(regexInit));
-    result += response.match(regexInit);
+    result += response.match(regexInit) + "\n";
     const regexMoveTo = /.*hape.move.*/g;
-    result += response.match(regexMoveTo);
+    result += response.match(regexMoveTo) + "\n";
     const regexLineTo = /.*hape.line.*/g;
     const lineToResult = [...response.matchAll(regexLineTo)];
     lineToResult.forEach((ele) => {
         // console.log(ele[0]);
-        result += ele[0];
+        result += ele[0] + "\n";
     });
     console.log("regex result ", result);
 
@@ -132,11 +132,18 @@ function regexResponse(response) {
 function changePoint(newCode) {
     var functionText = petalFunctionText === "" ? generatePetal.toString() : petalFunctionText.toString();
     // console.log("before change", functionText);
-    // functionText = functionText.replaceAll("three__WEBPACK_IMPORTED_MODULE_4__", "THREE");
     functionText = functionText.replaceAll(/three__WEBPACK_IMPORTED_MODULE_[0-9]__/g, "THREE");
-    // console.log("2", functionText);
-    functionText = functionText.replace("var shape = new THREE.Shape(); const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);", newCode);
+    // Remove old code but has been updated already.
+    functionText = functionText.replaceAll(/.*moveTo.*;/g, "");
+    functionText = functionText.replaceAll(/.*lineTo.*;/g, "");
+    // Remove original code
+    functionText = functionText.replace("const curve1 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 0), new THREE.Vector2(0, 0.5), new THREE.Vector2(-1, 1), new THREE.Vector2(-1, 2)); const curve2 = new THREE.CubicBezierCurve(new THREE.Vector2(-1, 2), new THREE.Vector2(-1, 3), new THREE.Vector2(-0.5, 4), new THREE.Vector2(0, 4)); const curve3 = new THREE.CubicBezierCurve(new THREE.Vector2(0, 4), new THREE.Vector2(0.5, 4), new THREE.Vector2(1, 3), new THREE.Vector2(1, 2)); const curve4 = new THREE.CubicBezierCurve(new THREE.Vector2(1, 2), new THREE.Vector2(1, 1), new THREE.Vector2(0, 0.5), new THREE.Vector2(0, 0)); shape.curves.push(curve1, curve2, curve3, curve4);", "");
 
+    // Add new code, using THREE.Shape() as place identifier
+    functionText = functionText.replace(/.*THREE.Shape.*;/g, newCode);
+    // Name all pentalShape to shape
+    functionText = functionText.replace(/[a-z]*[A-Z]*[Ss]hape\./g, "shape.");
+    functionText = functionText.replace(/[a-z]*[A-Z]*[Ss]hape /g, "shape ");
     console.log("change point", functionText);
     
     functionText = new Function("handShape", functionText.substring(functionText.indexOf('{')+1, functionText.lastIndexOf('}')));
