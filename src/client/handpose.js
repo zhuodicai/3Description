@@ -113,8 +113,8 @@ export const handpose = () => {
 
         canvasCtxShape.save();
         canvasCtxShape.fillStyle = "blue";
-        // canvasCtxShape.fillRect(0, 0, canvasElementShape.width, canvasElementShape.height);
         canvasCtxShape.clearRect(0, 0, canvasElementShape.width, canvasElementShape.height);
+        // console.log("now the cam belongs to:",document.getElementById("pills-position-tab"));
         if (results.landmarks) {
             if (results.landmarks.length == 2) {
                 const handShape = new THREE.Shape();

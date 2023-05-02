@@ -63,8 +63,8 @@
 						</label>
 					</div>
 					<div class="row border-bottom border-dark form-check pt-4 pb-3">
-						<input class="form-check-input" type="radio" name="exampleRadios" id="part-stem"
-							value="option3" disabled>
+						<input class="form-check-input" type="radio" name="exampleRadios" id="part-stem" value="option3"
+							disabled>
 						<label class="form-check-label" for="exampleRadios3">
 							&nbsp|&nbsp &nbsp Part3: &nbsp STEM
 						</label>
@@ -180,6 +180,44 @@
 					</div>
 					<div class="tab-pane fade" id="pills-position" role="tabpanel" aria-labelledby="pills-position-tab"
 						tabindex="0">
+						<h3 id="position-title">Petal Position Adjustment</h3>
+						<h4>> Verbal Description</h4>
+						<h5>❶ Record & Recognition</h5>
+						<p>Please use below buttons to record your message.</p>
+						<div class="row" style=" margin-right:0px; margin-left:0px">
+							<div class="col-6">
+								<div class="row">
+									<div class="col">
+										<button type="button" id="record" enabled class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">RECORD</span>
+										</button>
+										<button type="button" id="stopRecord" disabled
+											class="mdc-button mdc-button--raised">
+											<span class="mdc-button__ripple"></span>
+											<span class="mdc-button__label">STOP</span>
+										</button>
+									</div>
+									<div class="col">
+										<audio id=recordedAudio style="width: 300px;height: 40px;"></audio>
+									</div>
+								</div>
+							</div>
+							<br>
+							<div class="col-6" style="padding: 0px;">
+								<div class="mb-3">
+									<label for="record-message-label" class="form-label">Recorded message:</label>
+									<textarea class="form-control" id="record-message" rows="2"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<h5>❷ Result & Response</h5>
+						<p>OpenAI will respond based on your message.</p>
+						<div class="mb-3">
+							<label for="respond-message-label" class="form-label">Respond message:</label>
+							<textarea class="form-control" id="respond-message" rows="3"></textarea>
+						</div>
 						<h4>> Gesture Description</h4>
 						<h5>❶ Angle Constraint: Openness Adjustment </h5>
 						<p>Describe the angle with your right hand or both of your hands.</p>
@@ -190,6 +228,26 @@
 							<p id="remote">// Remote data from Arduino:</p>
 						</div>
 						<div id="canvas-threejs"></div> -->
+						<div class="row" style=" margin-right:0px; margin-left:0px">
+							<div id="liveView" class="videoView" style="padding:0px;">
+								<button id="webcamButton" class="mb-3 mdc-button mdc-button--raised">
+									<span class="mdc-button__ripple"></span>
+									<span class="mdc-button__label">ENABLE WEBCAM</span>
+								</button>
+								<div class="row" style="padding: 7.5px;">
+									<div class="col-6">
+										<video id="webcam" style="position: absolute" autoplay playsinline></video>
+										<canvas id="output_canvas" class="output_canvas"
+											style="position: relative; right: 0px;"></canvas>
+									</div>
+
+									<div class="col-6">
+										<canvas id="shape_canvas" class="shape_canvas"
+											style="height: 360px; width: 100%;"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="tab-pane fade" id="pills-color" role="tabpanel" aria-labelledby="pills-color-tab"
 						tabindex="0">

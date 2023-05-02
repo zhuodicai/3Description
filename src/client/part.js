@@ -8,13 +8,15 @@ export const partSelction = () => {
 
     petalPart.addEventListener('click', function onClick(event) {
         console.log("你好我是花瓣");
-        document.getElementById("color-title").innerHTML = "Petal Color Adjustment";
         document.getElementById("shape-title").innerHTML = "Petal Shape Adjustment";
+        document.getElementById("position-title").innerHTML = "Petal Position Adjustment";
+        document.getElementById("color-title").innerHTML = "Petal Color Adjustment";
     });
     sepalPart.addEventListener('click', function onClick(event) {
         console.log("你好我是花萼");
-        document.getElementById("color-title").innerHTML = "Sepal Color Adjustment";
         document.getElementById("shape-title").innerHTML = "Sepal Shape Adjustment";
+        document.getElementById("position-title").innerHTML = "Sepal Position Adjustment";
+        document.getElementById("color-title").innerHTML = "Sepal Color Adjustment";
     });
     stemPart.addEventListener('click', function onClick(event) {
         console.log("你好我是花茎");
