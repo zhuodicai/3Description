@@ -33,6 +33,7 @@ video {
     transform: scale(-1, 1);
     border: solid 1px #ced4da;
     border-radius: 4px;
+    background-color: rgb(255, 255, 255);
 }
 
 h2 {
